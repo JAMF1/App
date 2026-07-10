@@ -1,0 +1,6 @@
+{
+  "name": "Conecta X",
+  "description": "Plataforma de movilidad colaborativa para la comunidad de la UAM Xochimilco.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
