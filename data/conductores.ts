@@ -21,6 +21,7 @@ export const conductores: Conductor[] = [
     calificacionPromedio: 4.9,
     fechaRegistro: "2026-01-20",
     estadoSolicitud: "aprobado",
+    genero: "masculino",
     vehiculo: {
       marca: "Nissan",
       modelo: "Versa",
@@ -38,6 +39,7 @@ export const conductores: Conductor[] = [
     calificacionPromedio: 4.7,
     fechaRegistro: "2026-03-10",
     estadoSolicitud: "aprobado",
+    genero: "femenino",
     vehiculo: {
       marca: "Chevrolet",
       modelo: "Aveo",
@@ -55,6 +57,7 @@ export const conductores: Conductor[] = [
     calificacionPromedio: 5.0,
     fechaRegistro: "2026-02-05",
     estadoSolicitud: "aprobado",
+    genero: "masculino",
     vehiculo: {
       marca: "Toyota",
       modelo: "Prius (Híbrido)",
@@ -72,6 +75,7 @@ export const conductores: Conductor[] = [
     calificacionPromedio: 4.8,
     fechaRegistro: "2026-04-01",
     estadoSolicitud: "aprobado",
+    genero: "femenino",
     vehiculo: {
       marca: "Volkswagen",
       modelo: "Vento",

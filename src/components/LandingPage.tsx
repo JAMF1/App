@@ -16,6 +16,7 @@ import {
   Linkedin,
   MessageSquare
 } from "lucide-react";
+import LogoConectaX from "./Logo";
 
 interface LandingPageProps {
   setRoute: (route: "landing" | "login" | "registro-pasajero" | "registro-conductor" | "dashboard") => void;
@@ -38,45 +39,38 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
           {/* Logo */}
           <button 
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="flex items-center gap-3 group focus:outline-none cursor-pointer"
+            className="flex items-center gap-1 group focus:outline-none cursor-pointer"
             id="navbar-logo"
           >
-            <div className="w-10 h-10 rounded-xl bg-[#0B8F63] flex items-center justify-center shadow-md shadow-[#0B8F63]/10 transition-transform group-hover:scale-105">
-              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.905 0-5.64-.73-8.031-2.018" />
-              </svg>
-            </div>
-            <span className="text-xl font-bold font-display tracking-tight text-gray-900">
-              Conecta <span className="text-[#0B8F63]">X</span>
-            </span>
+            <LogoConectaX size="md" />
           </button>
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
             <button 
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="text-gray-900 hover:text-[#0B8F63] transition-colors cursor-pointer"
+              className="text-gray-900 hover:text-primary transition-colors cursor-pointer"
               id="nav-link-inicio"
             >
               Inicio
             </button>
             <button 
               onClick={() => scrollToId("como-funciona")}
-              className="text-gray-500 hover:text-[#0B8F63] transition-colors cursor-pointer"
+              className="text-gray-500 hover:text-primary transition-colors cursor-pointer"
               id="nav-link-como"
             >
               Cómo funciona
             </button>
             <button 
-              onClick={() => scrollToId("beneficios")}
-              className="text-gray-500 hover:text-[#0B8F63] transition-colors cursor-pointer"
+              onClick={() => scrollToId("faq-seguridad")}
+              className="text-gray-500 hover:text-primary transition-colors cursor-pointer"
               id="nav-link-beneficios"
             >
-              FAQ
+              FAQ / Seguridad
             </button>
             <button 
               onClick={() => scrollToId("footer")}
-              className="text-gray-500 hover:text-[#0B8F63] transition-colors cursor-pointer"
+              className="text-gray-500 hover:text-primary transition-colors cursor-pointer"
               id="nav-link-contacto"
             >
               Contacto
@@ -94,7 +88,7 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
             </button>
             <button
               onClick={() => setRoute("registro-pasajero")}
-              className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-[#0B8F63] text-white hover:bg-[#097551] transition-all shadow-md shadow-[#0B8F63]/10 hover:shadow-lg hover:shadow-[#0B8F63]/20 active:scale-95 cursor-pointer focus:outline-none"
+              className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-primary text-white hover:bg-primary-hover transition-all shadow-md shadow-primary/10 hover:shadow-lg hover:shadow-primary/20 active:scale-95 cursor-pointer focus:outline-none"
               id="btn-nav-register"
             >
               Regístrate
@@ -116,9 +110,9 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
               id="hero-content-col"
             >
               {/* Pill Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#DFF7EC] border border-[#d2f3e3] shadow-2xs">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0B8F63] animate-pulse"></span>
-                <span className="text-xs font-bold tracking-wider text-[#0B8F63] uppercase">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-light border border-primary/25 shadow-2xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                <span className="text-xs font-bold tracking-wider text-primary uppercase">
                   Exclusivo para la comunidad UAM-X
                 </span>
               </div>
@@ -126,7 +120,7 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
               {/* Headline */}
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-950 font-display leading-[1.1]">
                 Tu ruta,<br />
-                <span className="text-[#0B8F63]">nuestra comunidad.</span>
+                <span className="text-primary">nuestra comunidad.</span>
               </h1>
 
               {/* Description */}
@@ -138,14 +132,14 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
               <div className="flex flex-col sm:flex-row gap-4 pt-2">
                 <button
                   onClick={() => setRoute("registro-pasajero")}
-                  className="px-8 py-4 rounded-2xl text-sm font-bold bg-[#0B8F63] text-white hover:bg-[#097551] transition-all shadow-lg shadow-[#0B8F63]/15 hover:shadow-xl hover:shadow-[#0B8F63]/30 active:scale-95 text-center cursor-pointer focus:outline-none"
+                  className="px-8 py-4 rounded-2xl text-sm font-bold bg-primary text-white hover:bg-primary-hover transition-all shadow-lg shadow-primary/15 hover:shadow-xl hover:shadow-primary/30 active:scale-95 text-center cursor-pointer focus:outline-none"
                   id="btn-hero-cta"
                 >
                   Regístrate con tu correo UAM
                 </button>
                 <button
                   onClick={() => scrollToId("como-funciona")}
-                  className="px-8 py-4 rounded-2xl text-sm font-bold bg-[#DFF7EC] text-[#0B8F63] hover:bg-[#cbf1df] transition-all text-center cursor-pointer focus:outline-none"
+                  className="px-8 py-4 rounded-2xl text-sm font-bold bg-primary-light text-primary hover:bg-primary-light/80 transition-all text-center cursor-pointer focus:outline-none"
                   id="btn-hero-secondary"
                 >
                   Descubre cómo funciona
@@ -168,15 +162,15 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
 
               {/* Styled SVG Route */}
               <div className="relative w-full h-full flex flex-col justify-between p-6">
-                <svg className="absolute inset-0 w-full h-full p-6" viewBox="0 0 400 400" fill="none">
+                <svg className="absolute inset-0 w-full h-full p-6 text-primary" viewBox="0 0 400 400" fill="none">
                   {/* Styled connection lines */}
-                  <path d="M 80 320 C 120 200, 280 200, 320 80" stroke="#0B8F63" strokeWidth="4" strokeLinecap="round" strokeDasharray="8 8" className="animate-[dash_30s_linear_infinite]" />
-                  <path d="M 80 320 C 120 200, 280 200, 320 80" stroke="#0B8F63" strokeWidth="4" strokeLinecap="round" opacity="0.15" />
+                  <path d="M 80 320 C 120 200, 280 200, 320 80" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeDasharray="8 8" className="animate-[dash_30s_linear_infinite]" />
+                  <path d="M 80 320 C 120 200, 280 200, 320 80" stroke="currentColor" strokeWidth="4" strokeLinecap="round" opacity="0.15" />
                   
                   {/* Origin Ring */}
-                  <circle cx="80" cy="320" r="14" fill="#0B8F63" fillOpacity="0.1" />
-                  <circle cx="80" cy="320" r="6" fill="#0B8F63" />
-
+                  <circle cx="80" cy="320" r="14" fill="currentColor" fillOpacity="0.1" />
+                  <circle cx="80" cy="320" r="6" fill="currentColor" />
+                  
                   {/* Destination Ring */}
                   <circle cx="320" cy="80" r="18" fill="#EF4444" fillOpacity="0.1" />
                   <circle cx="320" cy="80" r="8" fill="#EF4444" />
@@ -191,11 +185,11 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
                   className="absolute top-12 left-6 bg-white border border-gray-100/80 rounded-2xl p-4 shadow-[0_15px_30px_rgba(0,0,0,0.06)] flex items-center gap-3.5 z-10 w-64"
                   id="hero-floating-card-1"
                 >
-                  <div className="w-10 h-10 rounded-full bg-[#0B8F63]/10 flex items-center justify-center shrink-0">
-                    <Car className="w-5 h-5 text-[#0B8F63]" />
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                    <Car className="w-5 h-5 text-primary" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[11px] font-bold text-[#0B8F63] uppercase tracking-wider">Conductor Verificado</p>
+                    <p className="text-[11px] font-bold text-primary uppercase tracking-wider">Conductor Verificado</p>
                     <p className="text-sm font-semibold text-gray-900 mt-0.5">Miguel te lleva</p>
                     <p className="text-xs text-gray-500 mt-0.5 flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Ruta: Metro Tasqueña
@@ -254,8 +248,8 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
               id="benefit-card-1"
             >
               <div className="space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#DFF7EC] flex items-center justify-center shadow-2xs">
-                  <Shield className="w-6 h-6 text-[#0B8F63]" />
+                <div className="w-12 h-12 rounded-2xl bg-primary-light flex items-center justify-center shadow-2xs">
+                  <Shield className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900">Seguridad ante todo</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
@@ -271,8 +265,8 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
               id="benefit-card-2"
             >
               <div className="space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#DFF7EC] flex items-center justify-center shadow-2xs">
-                  <DollarSign className="w-6 h-6 text-[#0B8F63]" />
+                <div className="w-12 h-12 rounded-2xl bg-primary-light flex items-center justify-center shadow-2xs">
+                  <DollarSign className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900">Ahorro inteligente</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
@@ -288,8 +282,8 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
               id="benefit-card-3"
             >
               <div className="space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#DFF7EC] flex items-center justify-center shadow-2xs">
-                  <Users className="w-6 h-6 text-[#0B8F63]" />
+                <div className="w-12 h-12 rounded-2xl bg-primary-light flex items-center justify-center shadow-2xs">
+                  <Users className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900">Comunidad solidaria</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
@@ -305,8 +299,8 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
               id="benefit-card-4"
             >
               <div className="space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#DFF7EC] flex items-center justify-center shadow-2xs">
-                  <Leaf className="w-6 h-6 text-[#0B8F63]" />
+                <div className="w-12 h-12 rounded-2xl bg-primary-light flex items-center justify-center shadow-2xs">
+                  <Leaf className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900">Sustentabilidad</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
@@ -319,12 +313,77 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
         </div>
       </section>
 
+      {/* NEW: FAQ & SECURITY PROTOCOLS SECTION */}
+      <section id="faq-seguridad" className="py-24 bg-gradient-to-b from-white to-gray-50/70 border-b border-gray-100 scroll-mt-20">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          {/* Header */}
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <div className="inline-flex items-center gap-1.5 bg-primary-light text-primary text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full border border-primary/10">
+              <span>🛡️</span> Protocolos de Confianza y Seguridad
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-950 font-display">
+              Preguntas Frecuentes & Seguridad
+            </h2>
+            <p className="text-base text-gray-500">
+              Resolvemos tus dudas sobre cómo funciona el modelo operativo y las medidas de seguridad activa en Conecta X.
+            </p>
+          </div>
+
+          {/* Grid Layout of FAQ Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* FAQ 1: Puntos Designados */}
+            <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.015)] space-y-3">
+              <span className="text-2xl">📍</span>
+              <h3 className="text-sm font-black text-gray-900 font-display uppercase tracking-wider">
+                ¿Qué son los Puntos de Abordaje Designados?
+              </h3>
+              <p className="text-xs text-gray-600 leading-relaxed">
+                Para garantizar viajes ordenados y predecibles, eliminamos el concepto de rutas libres. El origen y destino de cada trayecto se elige exclusivamente de una lista fija de paraderos oficiales y plazas comerciales estratégicas de la zona sur (como Plaza Paseo Acoxpa o Plaza Terraza Coapa), cercanas a la UAM Xochimilco.
+              </p>
+            </div>
+
+            {/* FAQ 2: Tarifa Dinamica */}
+            <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.015)] space-y-3">
+              <span className="text-2xl">💵</span>
+              <h3 className="text-sm font-black text-gray-900 font-display uppercase tracking-wider">
+                ¿Cómo funciona la Tarifa Cooperativa?
+              </h3>
+              <p className="text-xs text-gray-600 leading-relaxed">
+                La plataforma calcula automáticamente un aporte justo para combustible a razón de una tarifa base de $8 MXN por kilómetro real recorrido. El costo disminuye progresivamente un 10% por cada pasajero que se suma, hasta alcanzar un tope máximo del 30% de descuento si viajan 4 personas, promoviendo un ahorro solidario real.
+              </p>
+            </div>
+
+            {/* FAQ 3: Modo Mujer */}
+            <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.015)] space-y-3">
+              <span className="text-2xl">👩</span>
+              <h3 className="text-sm font-black text-gray-900 font-display uppercase tracking-wider">
+                ¿Qué es el Modo Mujer y quién puede usarlo?
+              </h3>
+              <p className="text-xs text-gray-600 leading-relaxed">
+                Es una función exclusiva de seguridad mujer-a-mujer. Al activarla, el sistema filtra y muestra únicamente conductoras y viajes integrados exclusivamente por mujeres. Para resguardar la integridad del protocolo, esta opción está restringida y bloqueada por sistema para perfiles de género masculino.
+              </p>
+            </div>
+
+            {/* FAQ 4: Identidad y Validación */}
+            <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.015)] space-y-3">
+              <span className="text-2xl">🔑</span>
+              <h3 className="text-sm font-black text-gray-900 font-display uppercase tracking-wider">
+                ¿Cómo se valida la identidad de la comunidad?
+              </h3>
+              <p className="text-xs text-gray-600 leading-relaxed">
+                El registro requiere obligatoriamente una cuenta institucional activa de la UAM Xochimilco (@alumnos.xoc.uam.mx). Asimismo, los conductores voluntarios pasan por una validación física manual de documentos vehiculares y licencia de conducir vigente antes de recibir la autorización para publicar rutas.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 4. SECCIÓN CTA FINAL */}
       <section id="como-funciona-cta" className="py-24 bg-gray-50 flex flex-col items-center justify-center">
         <div className="max-w-4xl mx-auto px-6 text-center space-y-8" id="cta-final-container">
           {/* Badge icon circle */}
-          <div className="inline-flex w-16 h-16 rounded-full bg-[#DFF7EC] items-center justify-center text-[#0B8F63] shadow-md shadow-[#0B8F63]/5">
-            <Heart className="w-8 h-8 fill-[#0B8F63]/10" />
+          <div className="inline-flex w-16 h-16 rounded-full bg-primary-light items-center justify-center text-primary shadow-md shadow-primary/5">
+            <Heart className="w-8 h-8 fill-primary/10" />
           </div>
 
           {/* Title */}
@@ -341,14 +400,14 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <button
               onClick={() => setRoute("registro-pasajero")}
-              className="px-8 py-4 rounded-2xl text-sm font-bold bg-[#0B8F63] text-white hover:bg-[#097551] transition-all shadow-lg shadow-[#0B8F63]/15 hover:shadow-xl hover:shadow-[#0B8F63]/30 active:scale-95 cursor-pointer focus:outline-none"
+              className="px-8 py-4 rounded-2xl text-sm font-bold bg-primary text-white hover:bg-primary-hover transition-all shadow-lg shadow-primary/15 hover:shadow-xl hover:shadow-primary/30 active:scale-95 cursor-pointer focus:outline-none"
               id="btn-cta-pasajero"
             >
               Soy Pasajero
             </button>
             <button
               onClick={() => setRoute("registro-conductor")}
-              className="px-8 py-4 rounded-2xl text-sm font-bold bg-[#DFF7EC] text-[#0B8F63] hover:bg-[#cbf1df] transition-all cursor-pointer focus:outline-none"
+              className="px-8 py-4 rounded-2xl text-sm font-bold bg-primary-light text-primary hover:bg-primary-light/85 transition-all cursor-pointer focus:outline-none"
               id="btn-cta-conductor"
             >
               Quiero ser Conductor
@@ -364,29 +423,24 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 pb-12 border-b border-gray-100">
             {/* Column 1 */}
             <div className="lg:col-span-4 space-y-6" id="footer-col-1">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#0B8F63] flex items-center justify-center text-white">
-                  <Car className="w-4.5 h-4.5" />
-                </div>
-                <span className="text-lg font-bold tracking-tight text-gray-900 font-display">
-                  Conecta <span className="text-[#0B8F63]">X</span>
-                </span>
+              <div className="flex items-center gap-1">
+                <LogoConectaX size="md" />
               </div>
               <p className="text-sm text-gray-500 leading-relaxed max-w-sm">
                 Movilidad colaborativa para la comunidad UAM Xochimilco. Una iniciativa solidaria sin fines de lucro enfocada en la sustentabilidad, seguridad y economía de estudiantes y docentes.
               </p>
               {/* Social icons */}
               <div className="flex gap-3">
-                <a href="#facebook" onClick={(e) => e.preventDefault()} className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#0B8F63] hover:bg-[#DFF7EC] transition-all shadow-2xs">
+                <a href="#facebook" onClick={(e) => e.preventDefault()} className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-primary hover:bg-primary-light transition-all shadow-2xs">
                   <Facebook className="w-4 h-4" />
                 </a>
-                <a href="#twitter" onClick={(e) => e.preventDefault()} className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#0B8F63] hover:bg-[#DFF7EC] transition-all shadow-2xs">
+                <a href="#twitter" onClick={(e) => e.preventDefault()} className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-primary hover:bg-primary-light transition-all shadow-2xs">
                   <Twitter className="w-4 h-4" />
                 </a>
-                <a href="#instagram" onClick={(e) => e.preventDefault()} className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#0B8F63] hover:bg-[#DFF7EC] transition-all shadow-2xs">
+                <a href="#instagram" onClick={(e) => e.preventDefault()} className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-primary hover:bg-primary-light transition-all shadow-2xs">
                   <Instagram className="w-4 h-4" />
                 </a>
-                <a href="#linkedin" onClick={(e) => e.preventDefault()} className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#0B8F63] hover:bg-[#DFF7EC] transition-all shadow-2xs">
+                <a href="#linkedin" onClick={(e) => e.preventDefault()} className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-primary hover:bg-primary-light transition-all shadow-2xs">
                   <Linkedin className="w-4 h-4" />
                 </a>
               </div>
@@ -399,22 +453,22 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
                 <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Plataforma</h4>
                 <ul className="space-y-2.5 text-sm">
                   <li>
-                    <button onClick={() => scrollToId("como-funciona")} className="text-gray-600 hover:text-[#0B8F63] transition-colors cursor-pointer">
+                    <button onClick={() => scrollToId("como-funciona")} className="text-gray-600 hover:text-primary transition-colors cursor-pointer">
                       Cómo funciona
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => setRoute("login")} className="text-gray-600 hover:text-[#0B8F63] transition-colors cursor-pointer">
+                    <button onClick={() => setRoute("login")} className="text-gray-600 hover:text-primary transition-colors cursor-pointer">
                       Buscar un viaje
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => setRoute("registro-conductor")} className="text-gray-600 hover:text-[#0B8F63] transition-colors cursor-pointer">
+                    <button onClick={() => setRoute("registro-conductor")} className="text-gray-600 hover:text-primary transition-colors cursor-pointer">
                       Ser conductor
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => scrollToId("como-funciona")} className="text-gray-600 hover:text-[#0B8F63] transition-colors cursor-pointer">
+                    <button onClick={() => scrollToId("como-funciona")} className="text-gray-600 hover:text-primary transition-colors cursor-pointer">
                       FAQ
                     </button>
                   </li>
@@ -426,22 +480,22 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
                 <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Comunidad</h4>
                 <ul className="space-y-2.5 text-sm">
                   <li>
-                    <a href="https://www.xoc.uam.mx" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#0B8F63] transition-colors">
+                    <a href="https://www.xoc.uam.mx" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary transition-colors">
                       UAM Xochimilco
                     </a>
                   </li>
                   <li>
-                    <button onClick={() => scrollToId("como-funciona")} className="text-gray-600 hover:text-[#0B8F63] transition-colors cursor-pointer">
+                    <button onClick={() => scrollToId("como-funciona")} className="text-gray-600 hover:text-primary transition-colors cursor-pointer">
                       Acerca del proyecto
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => alert("Blog disponible próximamente.")} className="text-gray-600 hover:text-[#0B8F63] transition-colors cursor-pointer">
+                    <button onClick={() => alert("Blog disponible próximamente.")} className="text-gray-600 hover:text-primary transition-colors cursor-pointer">
                       Blog
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => scrollToId("footer")} className="text-gray-600 hover:text-[#0B8F63] transition-colors cursor-pointer">
+                    <button onClick={() => scrollToId("footer")} className="text-gray-600 hover:text-primary transition-colors cursor-pointer">
                       Contacto
                     </button>
                   </li>
@@ -453,17 +507,17 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
                 <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Legal</h4>
                 <ul className="space-y-2.5 text-sm">
                   <li>
-                    <button onClick={() => alert("Aviso de Privacidad: Conecta X protege todos tus datos personales y los limita estrictamente a la validación de la cuenta universitaria.")} className="text-gray-600 hover:text-[#0B8F63] transition-colors cursor-pointer">
+                    <button onClick={() => alert("Aviso de Privacidad: Conecta X protege todos tus datos personales y los limita estrictamente a la validación de la cuenta universitaria.")} className="text-gray-600 hover:text-primary transition-colors cursor-pointer">
                       Aviso de privacidad
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => alert("Términos y condiciones: Esta es una plataforma social solidaria sin fines de lucro para viajes compartidos de la comunidad UAM.")} className="text-gray-600 hover:text-[#0B8F63] transition-colors cursor-pointer">
+                    <button onClick={() => alert("Términos y condiciones: Esta es una plataforma social solidaria sin fines de lucro para viajes compartidos de la comunidad UAM.")} className="text-gray-600 hover:text-primary transition-colors cursor-pointer">
                       Términos y condiciones
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => alert("Política de Uso: Exclusivo para miembros activos de la comunidad UAM Xochimilco.")} className="text-gray-600 hover:text-[#0B8F63] transition-colors cursor-pointer">
+                    <button onClick={() => alert("Política de Uso: Exclusivo para miembros activos de la comunidad UAM Xochimilco.")} className="text-gray-600 hover:text-primary transition-colors cursor-pointer">
                       Política de uso
                     </button>
                   </li>
@@ -477,7 +531,7 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
             <p>© 2026 Conecta X UAM-X. Todos los derechos reservados.</p>
             <p className="flex items-center gap-1.5">
               <span>Desarrollado con orgullo para la UAM Xochimilco</span>
-              <span className="text-[#0B8F63]">❤</span>
+              <span className="text-primary">❤</span>
             </p>
           </div>
         </div>

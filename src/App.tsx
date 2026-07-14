@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Car,
   Lock,
@@ -32,11 +32,14 @@ import {
 
 // Importar componentes
 import LandingPage from "./components/LandingPage";
+import LogoConectaX from "./components/Logo";
+import FareBreakdown from "./components/FareBreakdown";
 
 // Importar datos simulados
 import { usuarios, Usuario } from "../data/usuarios";
 import { conductores, Conductor } from "../data/conductores";
 import { viajes, Viaje } from "../data/viajes";
+import { PUNTOS_DESIGNADOS, PuntoDesignado } from "../data/paradas";
 
 export default function App() {
   // Navigation / Route state
@@ -47,6 +50,22 @@ export default function App() {
 
   // User session state
   const [currentUser, setCurrentUser] = useState<Usuario | null>(null);
+
+  // Modo Mujer State
+  const [modoMujer, setModoMujer] = useState(false);
+
+  // Dynamic Theme Switching based on Modo Mujer
+  useEffect(() => {
+    if (currentUser && modoMujer) {
+      document.documentElement.style.setProperty('--color-primary', '#7C4FE0');
+      document.documentElement.style.setProperty('--color-primary-light', '#EDE4FB');
+      document.documentElement.style.setProperty('--color-primary-hover', '#6232D0');
+    } else {
+      document.documentElement.style.setProperty('--color-primary', '#4361EE');
+      document.documentElement.style.setProperty('--color-primary-light', '#E4E9FB');
+      document.documentElement.style.setProperty('--color-primary-hover', '#304FFD');
+    }
+  }, [modoMujer, currentUser]);
 
   // Modal with pickup instructions & map
   const [activeInstructionsTrip, setActiveInstructionsTrip] = useState<Viaje | null>(null);
@@ -59,9 +78,13 @@ export default function App() {
   // Filter state for trips
   const [tripFilter, setTripFilter] = useState<"todos" | "programado" | "en_curso" | "finalizado">("todos");
 
+  // Passenger origin/destination filters
+  const [passengerFilterOrigen, setPassengerFilterOrigen] = useState<string>("todos");
+  const [passengerFilterDestino, setPassengerFilterDestino] = useState<string>("todos");
+
   // New Trip Creator states
   const [isCreatingTrip, setIsCreatingTrip] = useState(false);
-  const [newTripOrigen, setNewTripOrigen] = useState("Metro Tasqueña (Andenes de Autobuses Sur)");
+  const [newTripOrigen, setNewTripOrigen] = useState("Metro Lomas Estrella");
   const [newTripDestino, setNewTripDestino] = useState("Universidad Autónoma Metropolitana Unidad Xochimilco (UAM-X)");
   const [newTripConductorId, setNewTripConductorId] = useState("cond_1");
   const [newTripAsientos, setNewTripAsientos] = useState(3);
@@ -85,6 +108,7 @@ export default function App() {
   const [regPasajeroEmail, setRegPasajeroEmail] = useState("");
   const [regPasajeroPass, setRegPasajeroPass] = useState("");
   const [regPasajeroConfirmPass, setRegPasajeroConfirmPass] = useState("");
+  const [regPasajeroGenero, setRegPasajeroGenero] = useState<"femenino" | "masculino">("femenino");
   const [regPasajeroError, setRegPasajeroError] = useState("");
   const [isRegPasajeroLoading, setIsRegPasajeroLoading] = useState(false);
 
@@ -96,6 +120,7 @@ export default function App() {
   const [regCondModelo, setRegCondModelo] = useState("");
   const [regCondColor, setRegCondColor] = useState("");
   const [regCondPlacas, setRegCondPlacas] = useState("");
+  const [regCondGenero, setRegCondGenero] = useState<"femenino" | "masculino">("femenino");
   const [regCondAsientos, setRegCondAsientos] = useState(3);
   const [regCondError, setRegCondError] = useState("");
   const [isRegCondLoading, setIsRegCondLoading] = useState(false);
@@ -153,8 +178,8 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Branding */}
         <div className="flex flex-col items-center mb-8 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-[#DFF7EC] flex items-center justify-center mb-4 shadow-sm">
-            <Car className="w-8 h-8 text-[#0B8F63]" />
+          <div className="w-16 h-16 rounded-2xl bg-primary-light flex items-center justify-center mb-4 shadow-sm">
+            <Car className="w-8 h-8 text-primary" />
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">Conecta X</h1>
           <p className="text-sm text-[#6B7280] mt-1">
@@ -188,7 +213,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="ejemplo@alumnos.uam.mx"
-                  className="block w-full pl-10 pr-3.5 py-3 border border-gray-200 rounded-xl bg-white text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B8F63] focus:border-transparent text-sm transition-all"
+                  className="block w-full pl-10 pr-3.5 py-3 border border-gray-200 rounded-xl bg-white text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm transition-all"
                 />
               </div>
               <p className="text-[11px] text-[#6B7280]">
@@ -204,7 +229,7 @@ export default function LoginPage() {
                 <a
                   href="#forgot-password"
                   onClick={(e) => { e.preventDefault(); alert("Enlace de recuperación simulado."); }}
-                  className="text-xs font-medium text-[#0B8F63] hover:underline"
+                  className="text-xs font-medium text-primary hover:underline"
                 >
                   ¿Olvidaste tu contraseña?
                 </a>
@@ -219,7 +244,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="block w-full pl-10 pr-3.5 py-3 border border-gray-200 rounded-xl bg-white text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B8F63] focus:border-transparent text-sm transition-all"
+                  className="block w-full pl-10 pr-3.5 py-3 border border-gray-200 rounded-xl bg-white text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm transition-all"
                 />
               </div>
             </div>
@@ -227,7 +252,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-[#0B8F63] hover:bg-[#097551] text-white font-medium py-3 px-4 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0B8F63] text-sm flex items-center justify-center gap-2 shadow-sm"
+              className="w-full bg-primary hover:bg-primary-hover text-white font-medium py-3 px-4 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary text-sm flex items-center justify-center gap-2 shadow-sm"
             >
               {isLoading ? "Verificando..." : "Iniciar sesión"}
             </button>
@@ -236,7 +261,7 @@ export default function LoginPage() {
           <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col gap-3 text-center">
             <p className="text-sm text-[#6B7280]">
               ¿No tienes una cuenta?{" "}
-              <a href="/registro/pasajero" className="font-semibold text-[#0B8F63] hover:underline">
+              <a href="/registro/pasajero" className="font-semibold text-primary hover:underline">
                 Regístrate aquí
               </a>
             </p>
@@ -365,7 +390,7 @@ export default function RegistroPasajeroPage() {
               />
             </div>
 
-            <button type="submit" className="w-full bg-[#0B8F63] text-white p-2.5 rounded-xl">
+            <button type="submit" className="w-full bg-primary text-white p-2.5 rounded-xl">
               Registrarme
             </button>
           </form>
@@ -779,7 +804,8 @@ export const viajes: Viaje[] = [
         rol: "pasajero",
         fotoUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=120",
         calificacionPromedio: 5.0,
-        fechaRegistro: new Date().toISOString().split("T")[0]
+        fechaRegistro: new Date().toISOString().split("T")[0],
+        genero: regPasajeroGenero
       };
 
       setLocalUsuarios(prev => [...prev, newPassenger]);
@@ -822,6 +848,7 @@ export const viajes: Viaje[] = [
         calificacionPromedio: 5.0,
         fechaRegistro: new Date().toISOString().split("T")[0],
         estadoSolicitud: "pendiente",
+        genero: regCondGenero,
         vehiculo: {
           marca: regCondMarca.trim(),
           modelo: regCondModelo.trim(),
@@ -840,7 +867,8 @@ export const viajes: Viaje[] = [
         rol: "conductor",
         fotoUrl: newConductor.fotoUrl,
         calificacionPromedio: newConductor.calificacionPromedio,
-        fechaRegistro: newConductor.fechaRegistro
+        fechaRegistro: newConductor.fechaRegistro,
+        genero: regCondGenero
       };
       setLocalUsuarios(prev => [...prev, userRepresentation]);
       setCurrentUser(userRepresentation);
@@ -884,31 +912,50 @@ export const viajes: Viaje[] = [
     );
   };
 
+  // Helper function to calculate distance and duration between designated stops
+  const getDistanceAndDuration = (origen: string, destino: string) => {
+    if (origen === destino) return { distance: 1.0, duration: 3 };
+    
+    // Distances based on CDMX map
+    if (origen.includes("Lomas Estrella") || destino.includes("Lomas Estrella")) {
+      return { distance: 4.5, duration: 12 };
+    }
+    if (origen.includes("Tláhuac") || destino.includes("Tláhuac")) {
+      return { distance: 12.3, duration: 30 };
+    }
+    if (origen.includes("Constitución de 1917") || destino.includes("Constitución de 1917")) {
+      return { distance: 8.2, duration: 20 };
+    }
+    if (origen.includes("Paseo Acoxpa") || destino.includes("Paseo Acoxpa")) {
+      return { distance: 5.1, duration: 15 };
+    }
+    if (origen.includes("Tasqueña") || destino.includes("Tasqueña")) {
+      return { distance: 6.2, duration: 18 };
+    }
+    if (origen.includes("General Anaya") || destino.includes("General Anaya")) {
+      return { distance: 8.5, duration: 22 };
+    }
+    if (origen.includes("Huipulco") || destino.includes("Huipulco")) {
+      return { distance: 5.4, duration: 15 };
+    }
+    if (origen.includes("Terraza Coapa") || destino.includes("Terraza Coapa")) {
+      return { distance: 4.2, duration: 11 };
+    }
+    if (origen.includes("Galerías Coapa") || destino.includes("Galerías Coapa")) {
+      return { distance: 3.8, duration: 10 };
+    }
+    
+    return { distance: 5.0, duration: 15 };
+  };
+
   // Simulate creating a new trip
   const handleCreateTripSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Map origins/destinations to real distances for the simulation
-    let distance = 6.2;
-    let duration = 18;
+    const { distance, duration } = getDistanceAndDuration(newTripOrigen, newTripDestino);
 
-    if (newTripOrigen.includes("Tasqueña")) {
-      distance = 6.2;
-      duration = 18;
-    } else if (newTripOrigen.includes("General Anaya")) {
-      distance = 8.5;
-      duration = 22;
-    } else if (newTripOrigen.includes("Huipulco")) {
-      distance = 5.4;
-      duration = 15;
-    } else if (newTripOrigen.includes("Periférico Sur")) {
-      distance = 9.8;
-      duration = 25;
-    }
-
-    // Standard platform fare calculation rule
-    // Base $15 + $4.5 per km, rounded
-    const fareTotal = Math.round(15 + 4.5 * distance);
+    // Dynamic fare: $8 per kilometer
+    const fareTotal = Math.round(8 * distance);
     const fareConductor = Math.round(fareTotal * 0.85);
     const farePlataforma = fareTotal - fareConductor;
 
@@ -920,7 +967,7 @@ export const viajes: Viaje[] = [
       pasajerosIds: [],
       origen: {
         nombre: newTripOrigen,
-        lat: 19.3440, // standard CDMX approx
+        lat: 19.3440,
         lng: -99.1428
       },
       destino: {
@@ -953,8 +1000,28 @@ export const viajes: Viaje[] = [
 
   // Filtered trips
   const filteredViajes = localViajes.filter(v => {
-    if (tripFilter === "todos") return true;
-    return v.estado === tripFilter;
+    const statusMatch = tripFilter === "todos" ? true : v.estado === tripFilter;
+    if (!statusMatch) return false;
+
+    // Filter by passenger's selected designated stops
+    if (passengerFilterOrigen !== "todos" && v.origen.nombre !== passengerFilterOrigen) {
+      return false;
+    }
+    if (passengerFilterDestino !== "todos" && v.destino.nombre !== passengerFilterDestino) {
+      return false;
+    }
+
+    // Check Modo Mujer filter
+    if (currentUser && modoMujer) {
+      const cond = localConductores.find(c => c.id === v.conductorId);
+      // Ensure the driver is female and no male passengers are currently in the trip
+      const hasMalePassenger = v.pasajerosIds.some(pid => {
+        const p = localUsuarios.find(u => u.id === pid);
+        return p?.genero === "masculino";
+      });
+      return cond?.genero === "femenino" && !hasMalePassenger;
+    }
+    return true;
   });
 
   return (
@@ -981,14 +1048,14 @@ export const viajes: Viaje[] = [
 
               {/* Branding */}
               <div className="flex flex-col items-center mb-8 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-[#DFF7EC] flex items-center justify-center mb-4 shadow-sm">
-                  <Car className="w-8 h-8 text-[#0B8F63]" />
+                <div className="w-16 h-16 rounded-2xl bg-primary-light flex items-center justify-center mb-4 shadow-sm">
+                  <Car className="w-8 h-8 text-primary" />
                 </div>
                 <h1 className="text-3xl font-bold tracking-tight text-[#1A1A1A] font-display">Conecta X</h1>
                 <p className="text-sm text-[#6B7280] mt-1">
                   Movilidad colaborativa · UAM Xochimilco
                 </p>
-                <div className="mt-2 inline-flex items-center gap-1 bg-[#DFF7EC] px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-[#0B8F63]">
+                <div className="mt-2 inline-flex items-center gap-1 bg-primary-light px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-primary">
                   <span>Prototipo de Validación de UI</span>
                 </div>
               </div>
@@ -1019,7 +1086,7 @@ export const viajes: Viaje[] = [
                         value={loginEmail}
                         onChange={(e) => setLoginEmail(e.target.value)}
                         placeholder="ejemplo@alumnos.xoc.uam.mx"
-                        className="block w-full pl-10 pr-3.5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/20 text-sm transition-all"
+                        className="block w-full pl-10 pr-3.5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
                         disabled={isLoggingIn}
                       />
                     </div>
@@ -1037,7 +1104,7 @@ export const viajes: Viaje[] = [
                       <button
                         type="button"
                         onClick={() => alert("Simulación: Enlace de recuperación enviado al correo institucional.")}
-                        className="text-xs font-semibold text-[#0B8F63] hover:underline"
+                        className="text-xs font-semibold text-primary hover:underline"
                       >
                         ¿Olvidaste tu contraseña?
                       </button>
@@ -1051,7 +1118,7 @@ export const viajes: Viaje[] = [
                         value={loginPassword}
                         onChange={(e) => setLoginPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="block w-full pl-10 pr-3.5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/20 text-sm transition-all"
+                        className="block w-full pl-10 pr-3.5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
                         disabled={isLoggingIn}
                       />
                     </div>
@@ -1061,7 +1128,7 @@ export const viajes: Viaje[] = [
                   <button
                     type="submit"
                     disabled={isLoggingIn}
-                    className="w-full bg-[#0B8F63] hover:bg-[#097551] text-white font-semibold py-4 px-4 rounded-2xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0B8F63] text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#0B8F63]/20 disabled:opacity-75 disabled:cursor-not-allowed"
+                    className="w-full bg-primary hover:bg-primary-hover text-white font-semibold py-4 px-4 rounded-2xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary text-sm flex items-center justify-center gap-2 shadow-lg shadow-primary/20 disabled:opacity-75 disabled:cursor-not-allowed"
                   >
                     {isLoggingIn ? (
                       <>
@@ -1083,14 +1150,14 @@ export const viajes: Viaje[] = [
                     ¿No tienes una cuenta?{" "}
                     <button
                       onClick={() => setRoute("registro-pasajero")}
-                      className="font-semibold text-[#0B8F63] hover:underline focus:outline-none"
+                      className="font-semibold text-primary hover:underline focus:outline-none"
                     >
                       Regístrate aquí
                     </button>
                   </p>
                   <button
                     onClick={() => setRoute("registro-conductor")}
-                    className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-[#0B8F63] bg-[#DFF7EC] hover:bg-[#cbf1df] px-4 py-2 rounded-full transition-all w-fit mx-auto focus:outline-none"
+                    className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-primary bg-primary-light hover:bg-primary-light/80 px-4 py-2 rounded-full transition-all w-fit mx-auto focus:outline-none"
                   >
                     <ShieldCheck className="w-3.5 h-3.5" />
                     <span>Quiero ser conductor voluntario</span>
@@ -1106,13 +1173,13 @@ export const viajes: Viaje[] = [
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => handleDemoLogin("sofia.hernandez@alumnos.xoc.uam.mx")}
-                    className="bg-white hover:bg-[#DFF7EC] text-xs font-medium border border-gray-200 py-2 px-3 rounded-lg text-center transition-all shadow-2xs hover:border-[#0B8F63] focus:outline-none"
+                    className="bg-white hover:bg-primary-light text-xs font-medium border border-gray-200 py-2 px-3 rounded-lg text-center transition-all shadow-2xs hover:border-primary focus:outline-none"
                   >
                     Pasajero (Sofía)
                   </button>
                   <button
                     onClick={() => handleDemoLogin("carlos.fuentes@alumnos.xoc.uam.mx")}
-                    className="bg-white hover:bg-[#DFF7EC] text-xs font-medium border border-gray-200 py-2 px-3 rounded-lg text-center transition-all shadow-2xs hover:border-[#0B8F63] focus:outline-none"
+                    className="bg-white hover:bg-primary-light text-xs font-medium border border-gray-200 py-2 px-3 rounded-lg text-center transition-all shadow-2xs hover:border-primary focus:outline-none"
                   >
                     Conductor (Carlos)
                   </button>
@@ -1122,7 +1189,7 @@ export const viajes: Viaje[] = [
           </div>
 
           {/* Visual Side */}
-          <div className="hidden lg:flex flex-1 bg-gradient-to-br from-[#0B8F63] to-[#044c34] p-12 text-white flex-col justify-between">
+          <div className="hidden lg:flex flex-1 bg-gradient-to-br from-primary to-primary-hover p-12 text-white flex-col justify-between">
             <div>
               <div className="flex items-center gap-2">
                 <Car className="w-8 h-8" />
@@ -1197,8 +1264,8 @@ export const viajes: Viaje[] = [
 
             {/* Branding */}
             <div className="flex flex-col items-center mb-6 text-center">
-              <div className="w-14 h-14 rounded-2xl bg-[#DFF7EC] flex items-center justify-center mb-3 shadow-sm">
-                <Car className="w-7 h-7 text-[#0B8F63]" />
+              <div className="w-14 h-14 rounded-2xl bg-primary-light flex items-center justify-center mb-3 shadow-sm">
+                <Car className="w-7 h-7 text-primary" />
               </div>
               <h1 className="text-2xl font-bold tracking-tight text-[#1A1A1A] font-display">Registro de Pasajero</h1>
               <p className="text-xs text-[#6B7280] mt-1">
@@ -1230,7 +1297,7 @@ export const viajes: Viaje[] = [
                       value={regPasajeroNombre}
                       onChange={(e) => setRegPasajeroNombre(e.target.value)}
                       placeholder="Sofía Hernández García"
-                      className="block w-full pl-10 pr-3.5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/20 text-sm transition-all"
+                      className="block w-full pl-10 pr-3.5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
                       disabled={isRegPasajeroLoading}
                     />
                   </div>
@@ -1250,7 +1317,7 @@ export const viajes: Viaje[] = [
                       value={regPasajeroEmail}
                       onChange={(e) => setRegPasajeroEmail(e.target.value)}
                       placeholder="ejemplo@alumnos.xoc.uam.mx"
-                      className="block w-full pl-10 pr-3.5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/20 text-sm transition-all"
+                      className="block w-full pl-10 pr-3.5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
                       disabled={isRegPasajeroLoading}
                     />
                   </div>
@@ -1273,7 +1340,7 @@ export const viajes: Viaje[] = [
                       value={regPasajeroPass}
                       onChange={(e) => setRegPasajeroPass(e.target.value)}
                       placeholder="Mínimo 6 caracteres"
-                      className="block w-full pl-10 pr-3.5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/20 text-sm transition-all"
+                      className="block w-full pl-10 pr-3.5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
                       disabled={isRegPasajeroLoading}
                     />
                   </div>
@@ -1293,9 +1360,40 @@ export const viajes: Viaje[] = [
                       value={regPasajeroConfirmPass}
                       onChange={(e) => setRegPasajeroConfirmPass(e.target.value)}
                       placeholder="Repite tu contraseña"
-                      className="block w-full pl-10 pr-3.5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/20 text-sm transition-all"
+                      className="block w-full pl-10 pr-3.5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
                       disabled={isRegPasajeroLoading}
                     />
+                  </div>
+                </div>
+
+                {/* Género */}
+                <div className="space-y-1">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#6B7280] mb-2">
+                    Género *
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setRegPasajeroGenero("femenino")}
+                      className={`py-3 px-4 rounded-2xl text-xs font-bold transition-all border ${
+                        regPasajeroGenero === "femenino"
+                          ? "bg-pink-50 border-pink-200 text-pink-700 font-black"
+                          : "bg-gray-50 border-gray-100 text-gray-500 hover:bg-gray-100"
+                      }`}
+                    >
+                      👩 Femenino
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRegPasajeroGenero("masculino")}
+                      className={`py-3 px-4 rounded-2xl text-xs font-bold transition-all border ${
+                        regPasajeroGenero === "masculino"
+                          ? "bg-blue-50 border-blue-200 text-blue-700 font-black"
+                          : "bg-gray-50 border-gray-100 text-gray-500 hover:bg-gray-100"
+                      }`}
+                    >
+                      👨 Masculino
+                    </button>
                   </div>
                 </div>
 
@@ -1303,7 +1401,7 @@ export const viajes: Viaje[] = [
                 <button
                   type="submit"
                   disabled={isRegPasajeroLoading}
-                  className="w-full bg-[#0B8F63] hover:bg-[#097551] text-white font-semibold py-4 px-4 rounded-2xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0B8F63] text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#0B8F63]/20 disabled:opacity-75 disabled:cursor-not-allowed mt-2"
+                  className="w-full bg-primary hover:bg-primary-hover text-white font-semibold py-4 px-4 rounded-2xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary text-sm flex items-center justify-center gap-2 shadow-lg shadow-primary/20 disabled:opacity-75 disabled:cursor-not-allowed mt-2"
                 >
                   {isRegPasajeroLoading ? (
                     <>
@@ -1322,7 +1420,7 @@ export const viajes: Viaje[] = [
                   ¿Prefieres compartir tu auto?{" "}
                   <button
                     onClick={() => setRoute("registro-conductor")}
-                    className="font-semibold text-[#0B8F63] hover:underline focus:outline-none"
+                    className="font-semibold text-primary hover:underline focus:outline-none"
                   >
                     Regístrate como Conductor voluntario
                   </button>
@@ -1348,8 +1446,8 @@ export const viajes: Viaje[] = [
 
             {/* Branding */}
             <div className="flex flex-col items-center mb-6 text-center">
-              <div className="w-14 h-14 rounded-2xl bg-[#DFF7EC] flex items-center justify-center mb-3 shadow-sm">
-                <ShieldCheck className="w-7 h-7 text-[#0B8F63]" />
+              <div className="w-14 h-14 rounded-2xl bg-primary-light flex items-center justify-center mb-3 shadow-sm">
+                <ShieldCheck className="w-7 h-7 text-primary" />
               </div>
               <h1 className="text-2xl font-bold tracking-tight text-[#1A1A1A] font-display">Registro de Conductor Voluntario</h1>
               <p className="text-xs text-[#6B7280] mt-1">
@@ -1387,7 +1485,7 @@ export const viajes: Viaje[] = [
                           value={regCondNombre}
                           onChange={(e) => setRegCondNombre(e.target.value)}
                           placeholder="Carlos Fuentes"
-                          className="block w-full pl-9 pr-3 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/20 text-sm transition-all"
+                          className="block w-full pl-9 pr-3 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
                           disabled={isRegCondLoading}
                         />
                       </div>
@@ -1406,7 +1504,7 @@ export const viajes: Viaje[] = [
                           value={regCondEmail}
                           onChange={(e) => setRegCondEmail(e.target.value)}
                           placeholder="carlos.fuentes@alumnos.xoc.uam.mx"
-                          className="block w-full pl-9 pr-3 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/20 text-sm transition-all"
+                          className="block w-full pl-9 pr-3 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
                           disabled={isRegCondLoading}
                         />
                       </div>
@@ -1426,9 +1524,40 @@ export const viajes: Viaje[] = [
                         value={regCondPass}
                         onChange={(e) => setRegCondPass(e.target.value)}
                         placeholder="Mínimo 6 caracteres"
-                        className="block w-full pl-9 pr-3 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/20 text-sm transition-all"
+                        className="block w-full pl-9 pr-3 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
                         disabled={isRegCondLoading}
                       />
+                    </div>
+                  </div>
+
+                  {/* Género del Conductor */}
+                  <div className="space-y-1">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#6B7280] mb-2">
+                      Género *
+                    </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setRegCondGenero("femenino")}
+                        className={`py-3 px-4 rounded-2xl text-xs font-bold transition-all border ${
+                          regCondGenero === "femenino"
+                            ? "bg-pink-50 border-pink-200 text-pink-700 font-black"
+                            : "bg-gray-50 border-gray-100 text-gray-500 hover:bg-gray-100"
+                        }`}
+                      >
+                        👩 Femenino
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setRegCondGenero("masculino")}
+                        className={`py-3 px-4 rounded-2xl text-xs font-bold transition-all border ${
+                          regCondGenero === "masculino"
+                            ? "bg-blue-50 border-blue-200 text-blue-700 font-black"
+                            : "bg-gray-50 border-gray-100 text-gray-500 hover:bg-gray-100"
+                        }`}
+                      >
+                        👨 Masculino
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1449,7 +1578,7 @@ export const viajes: Viaje[] = [
                         value={regCondMarca}
                         onChange={(e) => setRegCondMarca(e.target.value)}
                         placeholder="Nissan"
-                        className="block w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/20 text-sm transition-all"
+                        className="block w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
                         disabled={isRegCondLoading}
                       />
                     </div>
@@ -1463,7 +1592,7 @@ export const viajes: Viaje[] = [
                         value={regCondModelo}
                         onChange={(e) => setRegCondModelo(e.target.value)}
                         placeholder="Versa 2022"
-                        className="block w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/20 text-sm transition-all"
+                        className="block w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
                         disabled={isRegCondLoading}
                       />
                     </div>
@@ -1477,7 +1606,7 @@ export const viajes: Viaje[] = [
                         value={regCondColor}
                         onChange={(e) => setRegCondColor(e.target.value)}
                         placeholder="Gris"
-                        className="block w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/20 text-sm transition-all"
+                        className="block w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
                         disabled={isRegCondLoading}
                       />
                     </div>
@@ -1491,7 +1620,7 @@ export const viajes: Viaje[] = [
                         value={regCondPlacas}
                         onChange={(e) => setRegCondPlacas(e.target.value)}
                         placeholder="982-YUZ"
-                        className="block w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/20 text-sm transition-all"
+                        className="block w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
                         disabled={isRegCondLoading}
                       />
                     </div>
@@ -1504,7 +1633,7 @@ export const viajes: Viaje[] = [
                     <select
                       value={regCondAsientos}
                       onChange={(e) => setRegCondAsientos(Number(e.target.value))}
-                      className="block w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/20 text-sm transition-all"
+                      className="block w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-[#1A1A1A] focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
                       disabled={isRegCondLoading}
                     >
                       <option value={1}>1 asiento disponible</option>
@@ -1519,7 +1648,7 @@ export const viajes: Viaje[] = [
                 <button
                   type="submit"
                   disabled={isRegCondLoading}
-                  className="w-full bg-[#0B8F63] hover:bg-[#097551] text-white font-semibold py-4 px-4 rounded-2xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0B8F63] text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#0B8F63]/20 disabled:opacity-75 disabled:cursor-not-allowed"
+                  className="w-full bg-primary hover:bg-primary-hover text-white font-semibold py-4 px-4 rounded-2xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary text-sm flex items-center justify-center gap-2 shadow-lg shadow-primary/20 disabled:opacity-75 disabled:cursor-not-allowed"
                 >
                   {isRegCondLoading ? (
                     <>
@@ -1541,7 +1670,7 @@ export const viajes: Viaje[] = [
                   ¿Solo quieres viajar como pasajero?{" "}
                   <button
                     onClick={() => setRoute("registro-pasajero")}
-                    className="font-semibold text-[#0B8F63] hover:underline focus:outline-none"
+                    className="font-semibold text-primary hover:underline focus:outline-none"
                   >
                     Regístrate como Pasajero aquí
                   </button>
@@ -1559,15 +1688,7 @@ export const viajes: Viaje[] = [
             <div>
               {/* Branding Header with Top Logout button */}
               <div className="p-6 border-b border-gray-100 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#DFF7EC] flex items-center justify-center shadow-xs">
-                    <Car className="w-5 h-5 text-[#0B8F63]" />
-                  </div>
-                  <div>
-                    <h2 className="font-bold text-lg text-[#1A1A1A] font-display">Conecta X</h2>
-                    <span className="text-[10px] text-gray-400 font-medium tracking-wider uppercase">UAM Xochimilco</span>
-                  </div>
-                </div>
+                <LogoConectaX size="sm" />
 
                 {/* Quick logout button at the very top */}
                 <button
@@ -1588,12 +1709,12 @@ export const viajes: Viaje[] = [
                 <img
                   src={currentUser.fotoUrl || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=120"}
                   alt={currentUser.nombre}
-                  className="w-10 h-10 rounded-full object-cover border-2 border-[#DFF7EC]"
+                  className="w-10 h-10 rounded-full object-cover border-2 border-primary-light"
                 />
                 <div className="min-w-0 flex-1">
                   <h4 className="text-xs font-semibold text-[#1A1A1A] truncate">{currentUser.nombre}</h4>
                   <p className="text-[10px] text-[#6B7280] truncate font-mono">{currentUser.correoInstitucional}</p>
-                  <span className="inline-block mt-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 bg-[#DFF7EC] text-[#0B8F63] rounded-lg">
+                  <span className="inline-block mt-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 bg-primary-light text-primary rounded-lg">
                     {currentUser.rol}
                   </span>
                 </div>
@@ -1605,19 +1726,61 @@ export const viajes: Viaje[] = [
                   onClick={() => setActiveTab("inicio")}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     activeTab === "inicio"
-                      ? "bg-[#DFF7EC] text-[#0B8F63]"
+                      ? "bg-primary-light text-primary"
                       : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                   }`}
                 >
-                  <Compass className={`w-5 h-5 ${activeTab === "inicio" ? "text-[#0B8F63]" : "text-gray-400"}`} />
+                  <Compass className={`w-5 h-5 ${activeTab === "inicio" ? "text-primary" : "text-gray-400"}`} />
                   <span>Inicio / Viajes</span>
                 </button>
               </nav>
+
+              {/* Modo Mujer Toggle Card in Sidebar */}
+              <div className={`mx-4 mt-6 p-4 rounded-[1.5rem] border space-y-3 transition-all ${
+                currentUser.genero === "masculino"
+                  ? "border-gray-200 bg-gray-50/60 opacity-70"
+                  : "border-pink-100 bg-pink-50/40"
+              }`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">{currentUser.genero === "masculino" ? "🔒" : "✨"}</span>
+                    <span className={`text-[11px] font-extrabold uppercase tracking-widest ${
+                      currentUser.genero === "masculino" ? "text-gray-500" : "text-pink-700"
+                    }`}>Modo Mujer</span>
+                  </div>
+                  
+                  {currentUser.genero === "masculino" ? (
+                    <span className="text-[8px] font-extrabold uppercase tracking-widest bg-gray-200 text-gray-500 px-2 py-0.5 rounded-lg">
+                      Restringido
+                    </span>
+                  ) : (
+                    <button
+                      onClick={() => setModoMujer(!modoMujer)}
+                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                        modoMujer ? "bg-pink-600" : "bg-gray-200"
+                      }`}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out ${
+                          modoMujer ? "translate-x-5" : "translate-x-0"
+                        }`}
+                      />
+                    </button>
+                  )}
+                </div>
+                <p className={`text-[11px] leading-normal font-medium ${
+                  currentUser.genero === "masculino" ? "text-gray-400" : "text-pink-900/80"
+                }`}>
+                  {currentUser.genero === "masculino"
+                    ? "Por políticas estrictas de seguridad de Conecta X, esta opción de viaje exclusivo mujer-a-mujer está reservada únicamente para conductoras y pasajeras verificadas."
+                    : "Filtra para ver únicamente conductoras y viajes compartidos exclusivos para mujeres en la comunidad."}
+                </p>
+              </div>
             </div>
 
             {/* Sidebar Footer with system verification marker */}
-            <div className="p-4 mx-4 mb-4 bg-[#DFF7EC]/30 rounded-xl border border-[#DFF7EC]/40 text-center">
-              <span className="text-[10px] font-bold text-[#0B8F63] uppercase tracking-wider block">🔒 Comunidad Protegida</span>
+            <div className="p-4 mx-4 mb-4 bg-primary-light/30 rounded-xl border border-primary-light/40 text-center">
+              <span className="text-[10px] font-bold text-primary uppercase tracking-wider block">🔒 Comunidad Protegida</span>
               <p className="text-[9px] text-gray-500 mt-0.5">Vínculo institucional verificado</p>
             </div>
           </aside>
@@ -1627,7 +1790,7 @@ export const viajes: Viaje[] = [
             {/* Top Premium Header Bar */}
             <div className="flex justify-between items-center bg-white border border-gray-100 rounded-3xl p-4 mb-8 shadow-[0_10px_30px_rgba(0,0,0,0.015)]">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#0B8F63] animate-pulse"></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></span>
                 <span className="text-xs font-semibold text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100/50">
                   UAM Xochimilco · {currentUser.rol === "conductor" ? "Panel de Conductor Voluntario" : "Panel de Pasajero"}
                 </span>
@@ -1643,11 +1806,11 @@ export const viajes: Viaje[] = [
                   <img
                     src={currentUser.fotoUrl || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=120"}
                     alt={currentUser.nombre}
-                    className="w-8 h-8 rounded-full object-cover border-2 border-[#DFF7EC]"
+                    className="w-8 h-8 rounded-full object-cover border-2 border-primary-light"
                   />
                   <div className="text-left hidden sm:block">
                     <p className="text-xs font-bold text-gray-800 leading-tight">{currentUser.nombre}</p>
-                    <p className="text-[9px] text-[#0B8F63] font-bold leading-none uppercase tracking-wider">{currentUser.rol}</p>
+                    <p className="text-[9px] text-primary font-bold leading-none uppercase tracking-wider">{currentUser.rol}</p>
                   </div>
                   <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
                 </button>
@@ -1667,7 +1830,7 @@ export const viajes: Viaje[] = [
                         }}
                         className="w-full text-left px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all flex items-center gap-2 cursor-pointer"
                       >
-                        <User className="w-3.5 h-3.5 text-[#0B8F63]" /> <span>Mi Perfil UAM-X</span>
+                        <User className="w-3.5 h-3.5 text-primary" /> <span>Mi Perfil UAM-X</span>
                       </button>
                       <button
                         onClick={() => {
@@ -1683,9 +1846,9 @@ export const viajes: Viaje[] = [
                           alert("Tu credencial escolar y matrícula han sido validadas por el comité administrativo.");
                           setIsUserDropdownOpen(false);
                         }}
-                        className="w-full text-left px-3 py-2 text-xs font-medium text-gray-700 hover:bg-[#DFF7EC] hover:text-[#0B8F63] rounded-lg transition-all flex items-center gap-2 cursor-pointer"
+                        className="w-full text-left px-3 py-2 text-xs font-medium text-gray-700 hover:bg-primary-light hover:text-primary rounded-lg transition-all flex items-center gap-2 cursor-pointer"
                       >
-                        <ShieldCheck className="w-3.5 h-3.5 text-[#0B8F63]" /> <span>Verificación de Estatus</span>
+                        <ShieldCheck className="w-3.5 h-3.5 text-primary" /> <span>Verificación de Estatus</span>
                       </button>
                       <button
                         onClick={() => {
@@ -1740,18 +1903,18 @@ export const viajes: Viaje[] = [
                       <div className="bg-white p-6 rounded-[2rem] border border-gray-100/80 shadow-[0_20px_50px_rgba(0,0,0,0.015)]">
                         <div className="flex justify-between items-start">
                           <p className="text-xs font-bold text-[#6B7280] uppercase tracking-wider">Asientos Ofrecidos</p>
-                          <span className="p-2.5 rounded-2xl bg-[#DFF7EC] text-[#0B8F63]">
+                          <span className="p-2.5 rounded-2xl bg-primary-light text-primary">
                             <Users className="w-4 h-4" />
                           </span>
                         </div>
                         <p className="text-3xl font-bold text-[#1A1A1A] tracking-tight mt-4">12 asientos</p>
-                        <p className="text-xs text-[#0B8F63] font-semibold mt-2">✓ Capacidad optimizada</p>
+                        <p className="text-xs text-primary font-semibold mt-2">✓ Capacidad optimizada</p>
                       </div>
 
                       <div className="bg-white p-6 rounded-[2rem] border border-gray-100/80 shadow-[0_20px_50px_rgba(0,0,0,0.015)]">
                         <div className="flex justify-between items-start">
                           <p className="text-xs font-bold text-[#6B7280] uppercase tracking-wider">Rutas Completadas</p>
-                          <span className="p-2.5 rounded-2xl bg-[#DFF7EC] text-[#0B8F63]">
+                          <span className="p-2.5 rounded-2xl bg-primary-light text-primary">
                             <Car className="w-4 h-4" />
                           </span>
                         </div>
@@ -1762,18 +1925,18 @@ export const viajes: Viaje[] = [
                       <div className="bg-white p-6 rounded-[2rem] border border-gray-100/80 shadow-[0_20px_50px_rgba(0,0,0,0.015)]">
                         <div className="flex justify-between items-start">
                           <p className="text-xs font-bold text-[#6B7280] uppercase tracking-wider">Calificación Promedio</p>
-                          <span className="p-2.5 rounded-2xl bg-[#DFF7EC] text-[#0B8F63]">
+                          <span className="p-2.5 rounded-2xl bg-primary-light text-primary">
                             <Award className="w-4 h-4" />
                           </span>
                         </div>
                         <p className="text-3xl font-bold text-[#1A1A1A] tracking-tight mt-4">5.0 ⭐</p>
-                        <p className="text-xs text-[#0B8F63] font-semibold mt-2">Excelente conductor</p>
+                        <p className="text-xs text-primary font-semibold mt-2">Excelente conductor</p>
                       </div>
 
                       <div className="bg-white p-6 rounded-[2rem] border border-gray-100/80 shadow-[0_20px_50px_rgba(0,0,0,0.015)]">
                         <div className="flex justify-between items-start">
                           <p className="text-xs font-bold text-[#6B7280] uppercase tracking-wider">Ahorro Estimado CO2</p>
-                          <span className="p-2.5 rounded-2xl bg-[#DFF7EC] text-[#0B8F63]">
+                          <span className="p-2.5 rounded-2xl bg-primary-light text-primary">
                             <Compass className="w-4 h-4" />
                           </span>
                         </div>
@@ -1802,13 +1965,14 @@ export const viajes: Viaje[] = [
                               <select
                                 value={newTripOrigen}
                                 onChange={(e) => setNewTripOrigen(e.target.value)}
-                                className="w-full bg-gray-50 border border-gray-100 hover:border-gray-200 px-4 py-3.5 rounded-2xl text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/15 transition-all appearance-none cursor-pointer"
+                                className="w-full bg-gray-50 border border-gray-100 hover:border-gray-200 px-4 py-3.5 rounded-2xl text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary/15 transition-all appearance-none cursor-pointer"
                               >
-                                <option value="Metro Tasqueña (Andenes de Autobuses Sur)">Metro Tasqueña</option>
-                                <option value="Metro General Anaya (Salida Oriente)">Metro General Anaya</option>
-                                <option value="Estación Tren Ligero Huipulco (Frente a Hospitales)">Estación Huipulco</option>
-                                <option value="Periférico Sur (Frente a Centro Comercial Perisur)">Periférico Sur</option>
-                                <option value="Universidad Autónoma Metropolitana Unidad Xochimilco (UAM-X)">Universidad (UAM Xochimilco)</option>
+                                {PUNTOS_DESIGNADOS.map(p => (
+                                  <option key={p.id} value={p.nombre}>
+                                    {p.destacado ? "⭐ " : "📍 "}
+                                    {p.nombre}
+                                  </option>
+                                ))}
                               </select>
                               <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
                                 <ChevronDown className="w-4 h-4" />
@@ -1823,17 +1987,43 @@ export const viajes: Viaje[] = [
                               <select
                                 value={newTripDestino}
                                 onChange={(e) => setNewTripDestino(e.target.value)}
-                                className="w-full bg-gray-50 border border-gray-100 hover:border-gray-200 px-4 py-3.5 rounded-2xl text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/15 transition-all appearance-none cursor-pointer"
+                                className="w-full bg-gray-50 border border-gray-100 hover:border-gray-200 px-4 py-3.5 rounded-2xl text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary/15 transition-all appearance-none cursor-pointer"
                               >
-                                <option value="Universidad Autónoma Metropolitana Unidad Xochimilco (UAM-X)">Universidad (UAM Xochimilco)</option>
-                                <option value="Metro Tasqueña (Andenes de Autobuses Sur)">Metro Tasqueña</option>
-                                <option value="Metro General Anaya (Salida Oriente)">Metro General Anaya</option>
-                                <option value="Estación Tren Ligero Huipulco (Frente a Hospitales)">Estación Huipulco</option>
-                                <option value="Periférico Sur (Frente a Centro Comercial Perisur)">Periférico Sur</option>
+                                {PUNTOS_DESIGNADOS.map(p => (
+                                  <option key={p.id} value={p.nombre}>
+                                    {p.destacado ? "⭐ " : "📍 "}
+                                    {p.nombre}
+                                  </option>
+                                ))}
                               </select>
                               <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
                                 <ChevronDown className="w-4 h-4" />
                               </div>
+                            </div>
+                          </div>
+
+                          {/* OPTIONAL INTERMEDIATE STOPS FIELD (COMPLEX ROUTES) */}
+                          <div className="space-y-1.5 bg-gray-50/50 p-4 rounded-2xl border border-gray-100">
+                            <div className="flex items-center justify-between">
+                              <label className="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400">
+                                Paradas Intermedias Opcionales
+                              </label>
+                              <span className="text-[9px] font-bold text-primary bg-primary-light px-1.5 py-0.5 rounded">Rutas Complejas</span>
+                            </div>
+                            <div className="flex gap-2">
+                              <input
+                                type="text"
+                                placeholder="Añadir tercera/cuarta parada..."
+                                disabled
+                                className="flex-1 bg-gray-100/70 border border-gray-200 px-4 py-2.5 rounded-xl text-xs text-gray-400 placeholder-gray-400 cursor-not-allowed"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => alert("Próximamente disponible: Las paradas intermedias automatizadas serán sugeridas en base a la demanda de la comunidad.")}
+                                className="bg-white border border-primary-light text-primary hover:bg-primary-light px-3.5 rounded-xl text-sm font-bold flex items-center justify-center shrink-0 shadow-xs active:scale-95 transition-all"
+                              >
+                                +
+                              </button>
                             </div>
                           </div>
 
@@ -1845,7 +2035,7 @@ export const viajes: Viaje[] = [
                                 <select
                                   value={newTripAsientos}
                                   onChange={(e) => setNewTripAsientos(Number(e.target.value))}
-                                  className="w-full bg-gray-50 border border-gray-100 px-4 py-3.5 rounded-2xl text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/15 transition-all appearance-none cursor-pointer"
+                                  className="w-full bg-gray-50 border border-gray-100 px-4 py-3.5 rounded-2xl text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary/15 transition-all appearance-none cursor-pointer"
                                 >
                                   <option value={1}>1 asiento</option>
                                   <option value={2}>2 asientos</option>
@@ -1864,7 +2054,7 @@ export const viajes: Viaje[] = [
                                 <select
                                   value={newTripMetodo}
                                   onChange={(e) => setNewTripMetodo(e.target.value as "spei" | "efectivo")}
-                                  className="w-full bg-gray-50 border border-gray-100 px-4 py-3.5 rounded-2xl text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#0B8F63]/15 transition-all appearance-none cursor-pointer"
+                                  className="w-full bg-gray-50 border border-gray-100 px-4 py-3.5 rounded-2xl text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary/15 transition-all appearance-none cursor-pointer"
                                 >
                                   <option value="efectivo">Efectivo</option>
                                   <option value="spei">SPEI (Transf.)</option>
@@ -1877,22 +2067,22 @@ export const viajes: Viaje[] = [
                           </div>
 
                           {/* Automatic Suggested Fare Box */}
-                          <div className="bg-[#DFF7EC] p-4 rounded-2xl flex justify-between items-center border border-[#0B8F63]/10">
-                            <div className="space-y-0.5 text-[#0B8F63]">
+                          <div className="bg-primary-light p-4 rounded-2xl flex justify-between items-center border border-primary/10">
+                            <div className="space-y-0.5 text-primary">
                               <p className="text-[10px] font-bold uppercase tracking-wider">Tarifa Sugerida de Recuperación:</p>
-                              <p className="text-[11px] leading-tight text-[#08734e]">Para viáticos de gasolina y gastos operativos.</p>
+                              <p className="text-[11px] leading-tight text-primary">Para viáticos de gasolina y gastos operativos.</p>
                             </div>
                             <div className="text-right shrink-0">
-                              <p className="text-base font-black text-[#0B8F63]">
+                              <p className="text-base font-black text-primary">
                                 ${newTripOrigen.includes("Tasqueña") || newTripDestino.includes("Tasqueña") ? "40" : newTripOrigen.includes("Anaya") || newTripDestino.includes("Anaya") ? "50" : newTripOrigen.includes("Huipulco") || newTripDestino.includes("Huipulco") ? "35" : "60"} MXN
                               </p>
-                              <p className="text-[9px] text-emerald-800 font-semibold">100% para conductor</p>
+                              <p className="text-[9px] text-primary font-semibold">100% para conductor</p>
                             </div>
                           </div>
 
                           <button
                             type="submit"
-                            className="w-full bg-[#0B8F63] hover:bg-[#097551] text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-[#0B8F63]/20 text-sm flex items-center justify-center gap-2 cursor-pointer"
+                            className="w-full bg-primary hover:bg-primary-hover text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-primary/20 text-sm flex items-center justify-center gap-2 cursor-pointer"
                           >
                             <Plus className="w-4 h-4" />
                             <span>Publicar Ruta Comunitaria</span>
@@ -1907,7 +2097,7 @@ export const viajes: Viaje[] = [
                             <h2 className="text-lg font-bold text-gray-900 font-display">Tus Rutas Activas y Pasajeros</h2>
                             <p className="text-xs text-gray-500 mt-0.5">Controla el estatus de tus traslados programados de hoy.</p>
                           </div>
-                          <span className="text-[11px] font-bold text-[#0B8F63] bg-[#DFF7EC] px-3 py-1 rounded-full">
+                          <span className="text-[11px] font-bold text-primary bg-primary-light px-3 py-1 rounded-full">
                             {localViajes.filter(v => v.conductorId === currentUser.id).length} publicadas
                           </span>
                         </div>
@@ -1949,7 +2139,7 @@ export const viajes: Viaje[] = [
                                                 ? "bg-blue-50 text-blue-600 border border-blue-100"
                                                 : viaje.estado === "en_curso"
                                                 ? "bg-amber-50 text-amber-600 border border-amber-100 animate-pulse"
-                                                : "bg-[#DFF7EC] text-[#0B8F63] border border-[#0B8F63]/10"
+                                                : "bg-primary-light text-primary border border-primary/10"
                                             }`}
                                           >
                                             {viaje.estado.replace("_", " ")}
@@ -1957,14 +2147,14 @@ export const viajes: Viaje[] = [
                                         </div>
                                         <div className="flex items-center gap-1.5 text-sm font-bold text-gray-800">
                                           <span>{viaje.origen.nombre.split(" (")[0]}</span>
-                                          <span className="text-[#0B8F63]">➔</span>
+                                          <span className="text-primary">➔</span>
                                           <span>{viaje.destino.nombre.split(" (")[0]}</span>
                                         </div>
                                       </div>
 
                                       <div className="text-right">
                                         <span className="text-[10px] uppercase font-bold text-gray-400 block">Viáticos Sugeridos</span>
-                                        <span className="text-sm font-extrabold text-[#0B8F63]">${viaje.tarifaTotal} MXN</span>
+                                        <span className="text-sm font-extrabold text-primary">${viaje.tarifaTotal} MXN</span>
                                       </div>
                                     </div>
 
@@ -1991,13 +2181,13 @@ export const viajes: Viaje[] = [
                                             );
                                             alert("¡Ruta finalizada! Gracias por apoyar a tu comunidad.");
                                           }}
-                                          className="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold px-4 py-2.5 rounded-xl border border-emerald-100 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                                          className="flex-1 bg-primary-light/40 hover:bg-emerald-100 text-emerald-700 text-xs font-bold px-4 py-2.5 rounded-xl border border-primary-light/50 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                                         >
                                           <span>✓</span> Completar Trayecto
                                         </button>
                                       )}
                                       {viaje.estado === "finalizado" && (
-                                        <div className="flex-1 text-center py-1 text-xs text-[#0B8F63] font-bold bg-[#DFF7EC] rounded-xl flex items-center justify-center gap-1.5">
+                                        <div className="flex-1 text-center py-1 text-xs text-primary font-bold bg-primary-light rounded-xl flex items-center justify-center gap-1.5">
                                           <span>🎉</span> Trayecto completado con éxito
                                         </div>
                                       )}
@@ -2012,7 +2202,7 @@ export const viajes: Viaje[] = [
 
                                       {activePassengers.length === 0 ? (
                                         <div className="bg-gray-50/50 border border-dashed border-gray-100 p-4 rounded-2xl text-center">
-                                          <div className="inline-block w-2 h-2 rounded-full bg-[#0B8F63] animate-ping mr-2"></div>
+                                          <div className="inline-block w-2 h-2 rounded-full bg-primary animate-ping mr-2"></div>
                                           <span className="text-xs text-gray-500 font-medium animate-pulse">Esperando confirmación de pasajeros de la UAM...</span>
                                         </div>
                                       ) : (
@@ -2057,12 +2247,12 @@ export const viajes: Viaje[] = [
                       <div className="bg-white p-6 rounded-[2rem] border border-gray-100/80 shadow-[0_20px_50px_rgba(0,0,0,0.02)]">
                         <div className="flex justify-between items-start">
                           <p className="text-xs font-bold text-[#6B7280] uppercase tracking-wider">Ahorro Estimado CO2</p>
-                          <span className="p-2.5 rounded-2xl bg-[#DFF7EC] text-[#0B8F63]">
+                          <span className="p-2.5 rounded-2xl bg-primary-light text-primary">
                             <Compass className="w-4 h-4" />
                           </span>
                         </div>
                         <p className="text-3xl font-bold text-[#1A1A1A] tracking-tight mt-4">124.8 kg</p>
-                        <p className="text-xs text-[#0B8F63] font-semibold mt-2 flex items-center gap-1">
+                        <p className="text-xs text-primary font-semibold mt-2 flex items-center gap-1">
                           <span>🌿</span> <span>+12% esta semana</span>
                         </p>
                       </div>
@@ -2070,7 +2260,7 @@ export const viajes: Viaje[] = [
                       <div className="bg-white p-6 rounded-[2rem] border border-gray-100/80 shadow-[0_20px_50px_rgba(0,0,0,0.02)]">
                         <div className="flex justify-between items-start">
                           <p className="text-xs font-bold text-[#6B7280] uppercase tracking-wider">Viajes Registrados</p>
-                          <span className="p-2.5 rounded-2xl bg-[#DFF7EC] text-[#0B8F63]">
+                          <span className="p-2.5 rounded-2xl bg-primary-light text-primary">
                             <Car className="w-4 h-4" />
                           </span>
                         </div>
@@ -2081,14 +2271,14 @@ export const viajes: Viaje[] = [
                       <div className="bg-white p-6 rounded-[2rem] border border-gray-100/80 shadow-[0_20px_50px_rgba(0,0,0,0.02)]">
                         <div className="flex justify-between items-start">
                           <p className="text-xs font-bold text-[#6B7280] uppercase tracking-wider">Conductores Activos</p>
-                          <span className="p-2.5 rounded-2xl bg-[#DFF7EC] text-[#0B8F63]">
+                          <span className="p-2.5 rounded-2xl bg-primary-light text-primary">
                             <Users className="w-4 h-4" />
                           </span>
                         </div>
                         <p className="text-3xl font-bold text-[#1A1A1A] tracking-tight mt-4">
                           {localConductores.filter(c => c.estadoSolicitud === "aprobado").length}
                         </p>
-                        <p className="text-xs text-[#0B8F63] font-semibold mt-2">✓ Todos certificados</p>
+                        <p className="text-xs text-primary font-semibold mt-2">✓ Todos certificados</p>
                       </div>
 
                       <div className="bg-white p-6 rounded-[2rem] border border-gray-100/80 shadow-[0_20px_50px_rgba(0,0,0,0.02)]">
@@ -2107,6 +2297,102 @@ export const viajes: Viaje[] = [
 
                 {currentUser.rol !== "conductor" && (
                   <>
+                    {/* BUSCADOR DE PARADAS DESIGNADAS */}
+                    <div className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-[0_20px_50px_rgba(0,0,0,0.02)] space-y-6">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                          <h2 className="text-base font-black text-gray-800 flex items-center gap-2">
+                            <span>📍</span> Puntos de Abordaje Designados
+                          </h2>
+                          <p className="text-xs text-gray-500 mt-1">
+                            Elige tu paradero oficial en la comunidad. Las tarifas son fijas y seguras.
+                          </p>
+                        </div>
+                        {/* Clear button if filtering */}
+                        {(passengerFilterOrigen !== "todos" || passengerFilterDestino !== "todos") && (
+                          <button
+                            onClick={() => {
+                              setPassengerFilterOrigen("todos");
+                              setPassengerFilterDestino("todos");
+                            }}
+                            className="text-xs font-bold text-primary hover:underline focus:outline-none self-start md:self-auto"
+                          >
+                            × Limpiar filtros de parada
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {/* Origen Selector */}
+                        <div className="space-y-1.5">
+                          <label className="block text-[11px] font-extrabold uppercase tracking-widest text-gray-400">
+                            Punto de Origen
+                          </label>
+                          <select
+                            value={passengerFilterOrigen}
+                            onChange={(e) => setPassengerFilterOrigen(e.target.value)}
+                            className="block w-full py-3.5 px-4 bg-gray-50 border border-gray-100 rounded-2xl text-xs font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                          >
+                            <option value="todos">🔍 Todos los puntos de origen</option>
+                            {PUNTOS_DESIGNADOS.map(p => (
+                              <option key={p.id} value={p.nombre} className={p.destacado ? "font-bold text-primary" : ""}>
+                                {p.destacado ? "⭐ " : "📍 "}
+                                {p.nombre}
+                                {p.destacado ? " (Punto Estrella)" : ""}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        {/* Destino Selector */}
+                        <div className="space-y-1.5">
+                          <label className="block text-[11px] font-extrabold uppercase tracking-widest text-gray-400">
+                            Punto de Destino
+                          </label>
+                          <select
+                            value={passengerFilterDestino}
+                            onChange={(e) => setPassengerFilterDestino(e.target.value)}
+                            className="block w-full py-3.5 px-4 bg-gray-50 border border-gray-100 rounded-2xl text-xs font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                          >
+                            <option value="todos">🔍 Todos los puntos de destino</option>
+                            {PUNTOS_DESIGNADOS.map(p => (
+                              <option key={p.id} value={p.nombre} className={p.destacado ? "font-bold text-primary" : ""}>
+                                {p.destacado ? "⭐ " : "📍 "}
+                                {p.nombre}
+                                {p.destacado ? " (Punto Estrella)" : ""}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* QUICK CHIPS FOR STAR POINTS */}
+                      <div className="space-y-2 pt-2 border-t border-gray-50">
+                        <span className="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400">
+                          Acceso Rápido a Conexiones Estrella
+                        </span>
+                        <div className="flex flex-wrap gap-2">
+                          {PUNTOS_DESIGNADOS.filter(p => p.destacado).map(p => {
+                            const isSelected = passengerFilterOrigen === p.nombre;
+                            return (
+                              <button
+                                key={p.id}
+                                onClick={() => setPassengerFilterOrigen(isSelected ? "todos" : p.nombre)}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all border shadow-xs ${
+                                  isSelected
+                                    ? "bg-primary text-white border-primary-hover hover:opacity-95"
+                                    : "bg-primary-light/50 text-primary border-primary-light hover:bg-primary-light"
+                                }`}
+                              >
+                                <span>★</span>
+                                <span>{p.nombre}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+
                     {/* Filter Controls */}
                 <div className="flex justify-between items-center bg-white p-5 rounded-[1.5rem] border border-gray-100/80 shadow-[0_20px_50px_rgba(0,0,0,0.01)]">
                   <div className="flex items-center gap-2">
@@ -2120,7 +2406,7 @@ export const viajes: Viaje[] = [
                         onClick={() => setTripFilter(f)}
                         className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition-all focus:outline-none ${
                           tripFilter === f
-                            ? "bg-[#0B8F63] text-white"
+                            ? "bg-primary text-white"
                             : "bg-gray-50 text-gray-600 hover:bg-gray-100"
                         }`}
                       >
@@ -2179,7 +2465,7 @@ export const viajes: Viaje[] = [
                                     : viaje.estado === "en_curso"
                                     ? "bg-yellow-50 text-yellow-600 animate-pulse"
                                     : viaje.estado === "finalizado"
-                                    ? "bg-[#DFF7EC] text-[#0B8F63]"
+                                    ? "bg-primary-light text-primary"
                                     : "bg-red-50 text-red-600"
                                 }`}
                               >
@@ -2216,28 +2502,27 @@ export const viajes: Viaje[] = [
 
                             <div className="grid grid-cols-2 gap-2 text-center md:border-l border-gray-200 md:pl-4">
                               <div className="bg-white p-3 rounded-2xl border border-gray-100">
-                                <Clock className="w-4 h-4 text-[#0B8F63] mx-auto mb-1" />
+                                <Clock className="w-4 h-4 text-primary mx-auto mb-1" />
                                 <span className="text-[10px] text-gray-400 uppercase block font-bold">Tiempo Est.</span>
                                 <span className="text-xs font-bold text-[#1A1A1A]">{viaje.tiempoEstimadoMin} mins</span>
                               </div>
                               <div className="bg-white p-3 rounded-2xl border border-gray-100">
-                                <Compass className="w-4 h-4 text-[#0B8F63] mx-auto mb-1" />
+                                <Compass className="w-4 h-4 text-primary mx-auto mb-1" />
                                 <span className="text-[10px] text-gray-400 uppercase block font-bold">Distancia</span>
                                 <span className="text-xs font-bold text-[#1A1A1A]">{viaje.distanciaKm} km</span>
                               </div>
                             </div>
                           </div>
 
-                          {/* Suggested Fare Details */}
-                          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center p-4 bg-[#DFF7EC]/30 border border-[#DFF7EC]/50 rounded-2xl gap-3">
-                            <div className="space-y-1">
-                              <span className="text-[10px] uppercase font-bold text-[#0B8F63] tracking-wider block">Tarifa Sugerida de Recuperación</span>
-                              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600">
-                                <span>Aporte sugerido para gasolina: <strong className="text-gray-900 font-bold">${viaje.tarifaTotal} MXN</strong></span>
-                              </div>
-                            </div>
+                          {/* Interactive Fare Breakdown Component */}
+                          <FareBreakdown
+                            distanciaKm={viaje.distanciaKm}
+                            pasajerosCount={activePassengersCount}
+                            hasJoined={isJoined}
+                          />
 
-                            <div className="flex items-center gap-3 shrink-0">
+                          <div className="flex flex-row justify-between items-center p-4 bg-gray-50/50 border border-gray-100 rounded-2xl">
+                            <div className="flex items-center gap-3 justify-between w-full">
                               <div className="text-right">
                                 <span className="text-[10px] text-gray-400 block font-semibold">Cupo</span>
                                 <span className="text-xs font-bold text-gray-800">
@@ -2254,12 +2539,50 @@ export const viajes: Viaje[] = [
                                       ? "bg-red-50 text-red-600 border border-red-100 hover:bg-red-100/80"
                                       : activePassengersCount >= maxAsientos
                                       ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                                      : "bg-[#0B8F63] text-white hover:bg-[#097551] shadow-md shadow-[#0B8F63]/10"
+                                      : "bg-primary text-white hover:bg-primary-hover shadow-md shadow-primary/10"
                                   }`}
                                   disabled={!isJoined && activePassengersCount >= maxAsientos}
                                 >
                                   {isJoined ? "Bajarme del viaje" : "Unirme al viaje"}
                                 </button>
+                              )}
+
+                              {viaje.estado === "finalizado" && (
+                                <div className="flex flex-col items-end gap-1">
+                                  <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Calificar Conductor</span>
+                                  <div className="flex items-center gap-1 bg-gray-50 px-2.5 py-1.5 rounded-xl border border-gray-100/50">
+                                    {[1, 2, 3, 4, 5].map((star) => {
+                                      const ratingKey = `rating_${viaje.id}`;
+                                      const currentRating = Number(localStorage.getItem(ratingKey) || 0);
+                                      return (
+                                        <button
+                                          key={star}
+                                          onClick={() => {
+                                            localStorage.setItem(ratingKey, String(star));
+                                            if (cond) {
+                                              const key = `rated_conductores_${cond.id}`;
+                                              const rates = JSON.parse(localStorage.getItem(key) || "[]");
+                                              rates.push(star);
+                                              localStorage.setItem(key, JSON.stringify(rates));
+                                              const avg = rates.reduce((a, b) => a + b, 0) / rates.length;
+                                              
+                                              setLocalConductores(prev =>
+                                                prev.map(c => c.id === cond.id ? { ...c, calificacionPromedio: Number(avg.toFixed(1)) } : c)
+                                              );
+                                            }
+                                            alert(`¡Muchas gracias! Has calificado a ${cond?.nombre || "tu conductor"} con ${star} estrellas.`);
+                                          }}
+                                          className={`text-sm transition-all hover:scale-125 focus:outline-none cursor-pointer ${
+                                            currentRating >= star ? "text-amber-500" : "text-gray-300 hover:text-amber-400"
+                                          }`}
+                                          title={`Calificar con ${star} estrellas`}
+                                        >
+                                          ★
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
                               )}
                             </div>
                           </div>
@@ -2279,11 +2602,11 @@ export const viajes: Viaje[] = [
                 <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-2xl max-w-2xl w-full max-h-[95vh] overflow-y-auto p-6 md:p-8 space-y-6">
                   {/* Succes Banner Header */}
                   <div className="text-center space-y-3">
-                    <div className="w-16 h-16 bg-[#DFF7EC] text-[#0B8F63] rounded-full flex items-center justify-center mx-auto shadow-sm">
+                    <div className="w-16 h-16 bg-primary-light text-primary rounded-full flex items-center justify-center mx-auto shadow-sm">
                       <ShieldCheck className="w-8 h-8" />
                     </div>
                     <div className="space-y-1">
-                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#0B8F63] bg-[#DFF7EC] px-3.5 py-1.5 rounded-full inline-block">
+                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-primary bg-primary-light px-3.5 py-1.5 rounded-full inline-block">
                         ¡Trayecto Autorizado con Éxito!
                       </span>
                       <h2 className="text-xl md:text-2xl font-black text-[#1A1A1A] font-display mt-2 leading-tight">
@@ -2299,7 +2622,7 @@ export const viajes: Viaje[] = [
                   <div className="bg-gray-50 p-5 rounded-3xl border border-gray-100/80 space-y-3">
                     <div className="flex justify-between items-center text-xs border-b border-gray-100 pb-2.5">
                       <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Detalle de tu Publicación</span>
-                      <span className="font-extrabold text-[#0B8F63] bg-emerald-50 px-2 py-1 rounded-lg">Ruta Comunitaria Activa</span>
+                      <span className="font-extrabold text-primary bg-primary-light/40 px-2 py-1 rounded-lg">Ruta Comunitaria Activa</span>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
@@ -2309,7 +2632,7 @@ export const viajes: Viaje[] = [
                       </div>
                       <div>
                         <p className="text-gray-400 font-semibold uppercase text-[9px] tracking-wider">Destino (Tu punto de llegada)</p>
-                        <p className="font-bold text-[#0B8F63] mt-0.5">{lastPublishedTrip.destino.nombre.split(" (")[0]}</p>
+                        <p className="font-bold text-primary mt-0.5">{lastPublishedTrip.destino.nombre.split(" (")[0]}</p>
                       </div>
                       <div>
                         <p className="text-gray-400 font-semibold uppercase text-[9px] tracking-wider">Asientos Ofrecidos</p>
@@ -2353,7 +2676,7 @@ export const viajes: Viaje[] = [
 
                         {/* Mid stop (creados puntos de recoge) */}
                         <div className="text-center space-y-1 relative">
-                          <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#DFF7EC] text-[#0B8F63] px-2 py-0.5 rounded-md text-[8px] font-extrabold whitespace-nowrap uppercase tracking-wider border border-emerald-300">
+                          <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary-light text-primary px-2 py-0.5 rounded-md text-[8px] font-extrabold whitespace-nowrap uppercase tracking-wider border border-primary-light">
                             Punto de Abordaje Creado
                           </div>
                           <div className="w-7 h-7 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold border-2 border-slate-900 mx-auto">
@@ -2364,7 +2687,7 @@ export const viajes: Viaje[] = [
 
                         {/* Destination node */}
                         <div className="text-center space-y-1">
-                          <div className="w-8 h-8 rounded-full bg-[#0B8F63] text-white flex items-center justify-center text-xs font-bold border-2 border-slate-900 mx-auto">
+                          <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold border-2 border-slate-900 mx-auto">
                             B
                           </div>
                           <span className="text-[9px] font-bold text-gray-400 block uppercase">UAM-X Campus</span>
@@ -2382,7 +2705,7 @@ export const viajes: Viaje[] = [
                   <div className="pt-2">
                     <button
                       onClick={() => setShowDriverSuccessModal(false)}
-                      className="w-full bg-[#0B8F63] hover:bg-[#097551] text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-[#0B8F63]/20 text-sm flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full bg-primary hover:bg-primary-hover text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-primary/20 text-sm flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <span>Entendido, Ver Panel de Ruta</span>
                     </button>
@@ -2397,7 +2720,7 @@ export const viajes: Viaje[] = [
                 <div className="bg-white rounded-[2rem] border border-gray-100 shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 space-y-6">
                   <div className="flex justify-between items-start">
                     <div className="space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#0B8F63] bg-[#DFF7EC] px-3 py-1.5 rounded-full">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-primary bg-primary-light px-3 py-1.5 rounded-full">
                         ¡Te has unido con éxito!
                       </span>
                       <h2 className="text-xl md:text-2xl font-bold text-[#1A1A1A] font-display mt-2">
@@ -2413,10 +2736,10 @@ export const viajes: Viaje[] = [
                   </div>
 
                   {/* Warning / Notice Box */}
-                  <div className="bg-emerald-50/50 border border-emerald-100 p-4 rounded-2xl flex items-start gap-3">
+                  <div className="bg-primary-light/30 border border-primary-light/50 p-4 rounded-2xl flex items-start gap-3">
                     <span className="text-xl">📍</span>
                     <div className="space-y-1">
-                      <h4 className="text-sm font-bold text-[#0B8F63]">Punto de Encuentro</h4>
+                      <h4 className="text-sm font-bold text-primary">Punto de Encuentro</h4>
                       <p className="text-xs text-gray-700 leading-relaxed">
                         Por favor dirígete con al menos <strong>5 minutos de anticipación</strong> al punto de partida indicado abajo para esperar a ser recogido de manera segura. El conductor voluntario te estará esperando.
                       </p>
@@ -2455,15 +2778,15 @@ export const viajes: Viaje[] = [
                         <line x1="0" y1="200" x2="600" y2="200" stroke="#cbd5e1" strokeWidth="8" />
 
                         {/* Route path from Origin pin to UAM Xochimilco pin */}
-                        <path d="M 80 80 Q 200 80 200 180 T 450 180" fill="none" stroke="#0B8F63" strokeWidth="4" strokeDasharray="6 4" />
+                        <path d="M 80 80 Q 200 80 200 180 T 450 180" fill="none" stroke="var(--color-primary)" strokeWidth="4" strokeDasharray="6 4" />
 
                         {/* Origin Landmark visual */}
                         <circle cx="80" cy="80" r="16" fill="#F97316" fillOpacity="0.2" />
                         <circle cx="80" cy="80" r="6" fill="#F97316" />
 
                         {/* Dest Landmark visual */}
-                        <circle cx="450" cy="180" r="20" fill="#0B8F63" fillOpacity="0.2" />
-                        <circle cx="450" cy="180" r="8" fill="#0B8F63" />
+                        <circle cx="450" cy="180" r="20" fill="var(--color-primary)" fillOpacity="0.2" />
+                        <circle cx="450" cy="180" r="8" fill="var(--color-primary)" />
 
                         {/* Connecting Line pulse */}
                         <circle cx="200" cy="130" r="5" fill="#3B82F6" className="animate-ping" />
@@ -2476,7 +2799,7 @@ export const viajes: Viaje[] = [
                         <span>Origen: {activeInstructionsTrip.origen.nombre.split(" (")[0]}</span>
                       </div>
 
-                      <div className="absolute bottom-4 right-4 bg-[#0B8F63]/95 backdrop-blur-xs px-3 py-1.5 rounded-xl text-white text-[10px] font-bold shadow-sm flex items-center gap-1.5">
+                      <div className="absolute bottom-4 right-4 bg-primary/95 backdrop-blur-xs px-3 py-1.5 rounded-xl text-white text-[10px] font-bold shadow-sm flex items-center gap-1.5">
                         <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
                         <span>Destino: UAM Xochimilco</span>
                       </div>
@@ -2492,15 +2815,15 @@ export const viajes: Viaje[] = [
                     <h4 className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">Pautas de Seguridad y Convivencia:</h4>
                     <ul className="text-xs text-[#6B7280] space-y-2 leading-relaxed">
                       <li className="flex items-start gap-2">
-                        <span className="text-[#0B8F63] font-bold">✓</span>
+                        <span className="text-primary font-bold">✓</span>
                         <span><strong>Identificación del vehículo:</strong> Al llegar el auto, verifica que coincidan la marca, color y placas (<strong className="font-mono text-gray-900">{localConductores.find(c => c.id === activeInstructionsTrip.conductorId)?.vehiculo.placas || "982-YUZ"}</strong>).</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-[#0B8F63] font-bold">✓</span>
+                        <span className="text-primary font-bold">✓</span>
                         <span><strong>Comunicación Respetuosa:</strong> Sé cortés con el conductor voluntario y los demás pasajeros; este es un viaje solidario de la comunidad de la UAM-X.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-[#0B8F63] font-bold">✓</span>
+                        <span className="text-primary font-bold">✓</span>
                         <span><strong>Aporte de Recuperación:</strong> Lleva el importe sugerido de <strong>${activeInstructionsTrip.tarifaTotal} MXN</strong> si pagas en efectivo, o ten lista la transferencia SPEI previamente acordada.</span>
                       </li>
                     </ul>
@@ -2508,7 +2831,7 @@ export const viajes: Viaje[] = [
 
                   <button
                     onClick={() => setActiveInstructionsTrip(null)}
-                    className="w-full bg-[#0B8F63] hover:bg-[#097551] text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-[#0B8F63]/20 text-sm cursor-pointer"
+                    className="w-full bg-primary hover:bg-primary-hover text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-primary/20 text-sm cursor-pointer"
                   >
                     Entendido, ya voy en camino
                   </button>

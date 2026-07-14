@@ -20,20 +20,20 @@ export const viajes: Viaje[] = [
     conductorId: "cond_1",
     pasajerosIds: ["usr_1", "usr_2"],
     origen: {
-      nombre: "Metro Tasqueña (Andenes de Autobuses Sur)",
-      lat: 19.3440,
-      lng: -99.1428
+      nombre: "Metro Lomas Estrella",
+      lat: 19.3255,
+      lng: -99.0912
     },
     destino: {
       nombre: "Universidad Autónoma Metropolitana Unidad Xochimilco (UAM-X)",
       lat: 19.3039,
       lng: -99.1171
     },
-    distanciaKm: 6.2,
-    tiempoEstimadoMin: 18,
-    tarifaTotal: 40,
-    tarifaConductor: 34,
-    tarifaPlataforma: 6,
+    distanciaKm: 4.5,
+    tiempoEstimadoMin: 12,
+    tarifaTotal: 36,
+    tarifaConductor: 31,
+    tarifaPlataforma: 5,
     estado: "finalizado",
     metodoPago: "efectivo",
     fecha: "2026-07-08T08:15:00-06:00"
@@ -43,20 +43,20 @@ export const viajes: Viaje[] = [
     conductorId: "cond_4",
     pasajerosIds: ["usr_3"],
     origen: {
-      nombre: "Metro General Anaya (Salida Oriente)",
-      lat: 19.3585,
-      lng: -99.1454
+      nombre: "Metro Tláhuac",
+      lat: 19.2863,
+      lng: -99.0051
     },
     destino: {
       nombre: "Universidad Autónoma Metropolitana Unidad Xochimilco (UAM-X)",
       lat: 19.3039,
       lng: -99.1171
     },
-    distanciaKm: 8.5,
-    tiempoEstimadoMin: 22,
-    tarifaTotal: 50,
-    tarifaConductor: 42,
-    tarifaPlataforma: 8,
+    distanciaKm: 12.3,
+    tiempoEstimadoMin: 30,
+    tarifaTotal: 98,
+    tarifaConductor: 83,
+    tarifaPlataforma: 15,
     estado: "en_curso",
     metodoPago: "spei",
     fecha: "2026-07-09T10:00:00-06:00"
@@ -64,22 +64,22 @@ export const viajes: Viaje[] = [
   {
     id: "viaje_3",
     conductorId: "cond_1",
-    pasajerosIds: ["usr_4", "usr_5"],
+    pasajerosIds: ["usr_4"],
     origen: {
-      nombre: "Estación Tren Ligero Huipulco (Frente a Hospitales)",
-      lat: 19.2929,
-      lng: -99.1504
+      nombre: "Metro Constitución de 1917",
+      lat: 19.3458,
+      lng: -99.0631
     },
     destino: {
       nombre: "Universidad Autónoma Metropolitana Unidad Xochimilco (UAM-X)",
       lat: 19.3039,
       lng: -99.1171
     },
-    distanciaKm: 5.4,
-    tiempoEstimadoMin: 15,
-    tarifaTotal: 35,
-    tarifaConductor: 30,
-    tarifaPlataforma: 5,
+    distanciaKm: 8.2,
+    tiempoEstimadoMin: 20,
+    tarifaTotal: 66,
+    tarifaConductor: 56,
+    tarifaPlataforma: 10,
     estado: "programado",
     metodoPago: "efectivo",
     fecha: "2026-07-10T07:30:00-06:00"
@@ -89,20 +89,20 @@ export const viajes: Viaje[] = [
     conductorId: "cond_4",
     pasajerosIds: ["usr_1"],
     origen: {
-      nombre: "Periférico Sur (Frente a Centro Comercial Perisur)",
-      lat: 19.3031,
-      lng: -99.1868
+      nombre: "Plaza Paseo Acoxpa",
+      lat: 19.2995,
+      lng: -99.1415
     },
     destino: {
       nombre: "Universidad Autónoma Metropolitana Unidad Xochimilco (UAM-X)",
       lat: 19.3039,
       lng: -99.1171
     },
-    distanciaKm: 9.8,
-    tiempoEstimadoMin: 25,
-    tarifaTotal: 60,
-    tarifaConductor: 51,
-    tarifaPlataforma: 9,
+    distanciaKm: 5.1,
+    tiempoEstimadoMin: 15,
+    tarifaTotal: 41,
+    tarifaConductor: 35,
+    tarifaPlataforma: 6,
     estado: "programado",
     metodoPago: "spei",
     fecha: "2026-07-10T08:45:00-06:00"
@@ -110,22 +110,22 @@ export const viajes: Viaje[] = [
   {
     id: "viaje_5",
     conductorId: "cond_1",
-    pasajerosIds: ["usr_2", "usr_3", "usr_4"],
+    pasajerosIds: ["usr_2", "usr_3"],
     origen: {
       nombre: "Universidad Autónoma Metropolitana Unidad Xochimilco (UAM-X)",
       lat: 19.3039,
       lng: -99.1171
     },
     destino: {
-      nombre: "Metro Tasqueña (Andenes de Autobuses Sur)",
+      nombre: "Metro Tasqueña",
       lat: 19.3440,
       lng: -99.1428
     },
     distanciaKm: 6.2,
-    tiempoEstimadoMin: 20,
-    tarifaTotal: 40,
-    tarifaConductor: 34,
-    tarifaPlataforma: 6,
+    tiempoEstimadoMin: 18,
+    tarifaTotal: 50,
+    tarifaConductor: 42,
+    tarifaPlataforma: 8,
     estado: "finalizado",
     metodoPago: "spei",
     fecha: "2026-07-08T18:10:00-06:00"
@@ -133,23 +133,23 @@ export const viajes: Viaje[] = [
   {
     id: "viaje_6",
     conductorId: "cond_4",
-    pasajerosIds: ["usr_5"],
+    pasajerosIds: [],
     origen: {
       nombre: "Universidad Autónoma Metropolitana Unidad Xochimilco (UAM-X)",
       lat: 19.3039,
       lng: -99.1171
     },
     destino: {
-      nombre: "Estación Tren Ligero Huipulco (Frente a Hospitales)",
-      lat: 19.2929,
-      lng: -99.1504
+      nombre: "Plaza Galerías Coapa",
+      lat: 19.2925,
+      lng: -99.1235
     },
-    distanciaKm: 5.4,
-    tiempoEstimadoMin: 15,
-    tarifaTotal: 35,
-    tarifaConductor: 30,
+    distanciaKm: 3.8,
+    tiempoEstimadoMin: 10,
+    tarifaTotal: 30,
+    tarifaConductor: 25,
     tarifaPlataforma: 5,
-    estado: "cancelado",
+    estado: "programado",
     metodoPago: "efectivo",
     fecha: "2026-07-09T14:30:00-06:00"
   }
