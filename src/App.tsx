@@ -34,6 +34,7 @@ import {
 import LandingPage from "./components/LandingPage";
 import LogoConectaX from "./components/Logo";
 import FareBreakdown from "./components/FareBreakdown";
+import { calcularTarifaSugeridaSubruta } from "./lib/pricing";
 
 // Importar datos simulados
 import { usuarios, Usuario } from "../data/usuarios";
@@ -887,9 +888,12 @@ export const viajes: Viaje[] = [
         if (viaje.id === tripId) {
           // If already in trip, remove them
           if (viaje.pasajerosIds.includes(currentUser.id)) {
+            const updatedRutas = { ...(viaje.pasajerosRutas || {}) };
+            delete updatedRutas[currentUser.id];
             return {
               ...viaje,
-              pasajerosIds: viaje.pasajerosIds.filter(id => id !== currentUser.id)
+              pasajerosIds: viaje.pasajerosIds.filter(id => id !== currentUser.id),
+              pasajerosRutas: updatedRutas
             };
           } else {
             // Check if seats are available
@@ -901,9 +905,18 @@ export const viajes: Viaje[] = [
             }
             // Trigger instruction modal for joining!
             setActiveInstructionsTrip(viaje);
+
+            const subrouteOrigen = passengerFilterOrigen !== "todos" ? passengerFilterOrigen : viaje.origen.nombre;
+            const subrouteDestino = passengerFilterDestino !== "todos" ? passengerFilterDestino : viaje.destino.nombre;
+            const updatedRutas = {
+              ...(viaje.pasajerosRutas || {}),
+              [currentUser.id]: { origen: subrouteOrigen, destino: subrouteDestino }
+            };
+
             return {
               ...viaje,
-              pasajerosIds: [...viaje.pasajerosIds, currentUser.id]
+              pasajerosIds: [...viaje.pasajerosIds, currentUser.id],
+              pasajerosRutas: updatedRutas
             };
           }
         }
@@ -982,7 +995,12 @@ export const viajes: Viaje[] = [
       tarifaPlataforma: farePlataforma,
       estado: "programado",
       metodoPago: newTripMetodo,
-      fecha: new Date(Date.now() + 86400000).toISOString() // Tomorrow
+      fecha: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
+      paradas: [
+        { nombre: newTripOrigen, distanciaDesdeAnteriorKm: 0 },
+        { nombre: newTripDestino, distanciaDesdeAnteriorKm: distance }
+      ],
+      pasajerosRutas: {}
     };
 
     setLocalViajes(prev => [newTrip, ...prev]);
@@ -2027,41 +2045,22 @@ export const viajes: Viaje[] = [
                             </div>
                           </div>
 
-                          {/* Available Seats & Payment in Row */}
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-1.5">
-                              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500">Asientos Disponibles</label>
-                              <div className="relative">
-                                <select
-                                  value={newTripAsientos}
-                                  onChange={(e) => setNewTripAsientos(Number(e.target.value))}
-                                  className="w-full bg-gray-50 border border-gray-100 px-4 py-3.5 rounded-2xl text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary/15 transition-all appearance-none cursor-pointer"
-                                >
-                                  <option value={1}>1 asiento</option>
-                                  <option value={2}>2 asientos</option>
-                                  <option value={3}>3 asientos</option>
-                                  <option value={4}>4 asientos</option>
-                                </select>
-                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                                  <ChevronDown className="w-4 h-4" />
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="space-y-1.5">
-                              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500">Método de Pago</label>
-                              <div className="relative">
-                                <select
-                                  value={newTripMetodo}
-                                  onChange={(e) => setNewTripMetodo(e.target.value as "spei" | "efectivo")}
-                                  className="w-full bg-gray-50 border border-gray-100 px-4 py-3.5 rounded-2xl text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary/15 transition-all appearance-none cursor-pointer"
-                                >
-                                  <option value="efectivo">Efectivo</option>
-                                  <option value="spei">SPEI (Transf.)</option>
-                                </select>
-                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                                  <ChevronDown className="w-4 h-4" />
-                                </div>
+                          {/* Available Seats */}
+                          <div className="space-y-1.5">
+                            <label className="block text-xs font-bold uppercase tracking-wider text-gray-500">Asientos Disponibles</label>
+                            <div className="relative">
+                              <select
+                                value={newTripAsientos}
+                                onChange={(e) => setNewTripAsientos(Number(e.target.value))}
+                                className="w-full bg-gray-50 border border-gray-100 px-4 py-3.5 rounded-2xl text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary/15 transition-all appearance-none cursor-pointer"
+                              >
+                                <option value={1}>1 asiento</option>
+                                <option value={2}>2 asientos</option>
+                                <option value={3}>3 asientos</option>
+                                <option value={4}>4 asientos</option>
+                              </select>
+                              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                                <ChevronDown className="w-4 h-4" />
                               </div>
                             </div>
                           </div>
@@ -2197,7 +2196,6 @@ export const viajes: Viaje[] = [
                                     <div className="space-y-3">
                                       <div className="flex justify-between items-center text-xs">
                                         <span className="font-bold text-gray-700 uppercase tracking-wider text-[10px]">Pasajeros confirmados ({seatsOccupied} / {maxSeatsAvailable}):</span>
-                                        <span className="text-gray-400 font-medium">Método: {viaje.metodoPago.toUpperCase()}</span>
                                       </div>
 
                                       {activePassengers.length === 0 ? (
@@ -2457,7 +2455,7 @@ export const viajes: Viaje[] = [
                               </div>
                             </div>
 
-                            <div className="flex items-center gap-2 self-stretch sm:self-auto justify-between">
+                            <div className="flex items-center gap-2 self-stretch sm:self-auto">
                               <span
                                 className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
                                   viaje.estado === "programado"
@@ -2471,13 +2469,6 @@ export const viajes: Viaje[] = [
                               >
                                 {viaje.estado.replace("_", " ")}
                               </span>
-
-                              <div className="text-right">
-                                <span className="text-xs text-gray-500 block">Metodo de pago</span>
-                                <span className="text-xs font-mono font-bold text-gray-800 uppercase bg-gray-100 px-2 py-0.5 rounded">
-                                  {viaje.metodoPago}
-                                </span>
-                              </div>
                             </div>
                           </div>
 
@@ -2516,9 +2507,13 @@ export const viajes: Viaje[] = [
 
                           {/* Interactive Fare Breakdown Component */}
                           <FareBreakdown
-                            distanciaKm={viaje.distanciaKm}
-                            pasajerosCount={activePassengersCount}
-                            hasJoined={isJoined}
+                            paradas={viaje.paradas}
+                            pasajerosIds={viaje.pasajerosIds}
+                            pasajerosRutas={viaje.pasajerosRutas}
+                            currentUserId={currentUser.id}
+                            origenBuscado={passengerFilterOrigen}
+                            destinoBuscado={passengerFilterDestino}
+                            isUserJoined={isJoined}
                           />
 
                           <div className="flex flex-row justify-between items-center p-4 bg-gray-50/50 border border-gray-100 rounded-2xl">
@@ -2824,7 +2819,19 @@ export const viajes: Viaje[] = [
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-primary font-bold">✓</span>
-                        <span><strong>Aporte de Recuperación:</strong> Lleva el importe sugerido de <strong>${activeInstructionsTrip.tarifaTotal} MXN</strong> si pagas en efectivo, o ten lista la transferencia SPEI previamente acordada.</span>
+                        <span><strong>Aporte de Recuperación:</strong> Lleva el importe sugerido de <strong>${
+                          activeInstructionsTrip
+                            ? calcularTarifaSugeridaSubruta(
+                                activeInstructionsTrip.paradas,
+                                activeInstructionsTrip.pasajerosIds,
+                                activeInstructionsTrip.pasajerosRutas || {},
+                                currentUser.id,
+                                passengerFilterOrigen,
+                                passengerFilterDestino,
+                                activeInstructionsTrip.pasajerosIds.includes(currentUser.id)
+                              ).tarifaSugeridaTotal
+                            : 0
+                        } MXN</strong> como aportación voluntaria para el combustible. El método de entrega se coordina libremente con el conductor.</span>
                       </li>
                     </ul>
                   </div>

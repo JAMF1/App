@@ -14,7 +14,9 @@ import {
   Twitter,
   Instagram,
   Linkedin,
-  MessageSquare
+  MessageSquare,
+  Gift,
+  Sparkles
 } from "lucide-react";
 import LogoConectaX from "./Logo";
 
@@ -23,6 +25,10 @@ interface LandingPageProps {
 }
 
 export default function LandingPage({ setRoute }: LandingPageProps) {
+  const [montoDonacion, setMontoDonacion] = React.useState<number | "otro">(50);
+  const [otroMontoValue, setOtroMontoValue] = React.useState<string>("");
+  const [mostrarAgradecimiento, setMostrarAgradecimiento] = React.useState<boolean>(false);
+
   // Smooth scroll helper
   const scrollToId = (id: string) => {
     const element = document.getElementById(id);
@@ -342,14 +348,25 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
               </p>
             </div>
 
-            {/* FAQ 2: Tarifa Dinamica */}
+            {/* FAQ 2: Tarifa Cooperativa */}
             <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.015)] space-y-3">
               <span className="text-2xl">💵</span>
               <h3 className="text-sm font-black text-gray-900 font-display uppercase tracking-wider">
                 ¿Cómo funciona la Tarifa Cooperativa?
               </h3>
               <p className="text-xs text-gray-600 leading-relaxed">
-                La plataforma calcula automáticamente un aporte justo para combustible a razón de una tarifa base de $8 MXN por kilómetro real recorrido. El costo disminuye progresivamente un 10% por cada pasajero que se suma, hasta alcanzar un tope máximo del 30% de descuento si viajan 4 personas, promoviendo un ahorro solidario real.
+                La plataforma calcula automáticamente un aporte justo para combustible a razón de una tarifa sugerida base de $6 MXN por kilómetro real recorrido en cada tramo del trayecto. El costo total de cada tramo se distribuye de forma equitativa únicamente entre los pasajeros que viajan a bordo durante ese tramo específico.
+              </p>
+            </div>
+
+            {/* FAQ 5: Cambios en el precio */}
+            <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.015)] space-y-3">
+              <span className="text-2xl">👥</span>
+              <h3 className="text-sm font-black text-gray-900 font-display uppercase tracking-wider">
+                ¿Por qué el precio cambia según cuántos pasajeros hay?
+              </h3>
+              <p className="text-xs text-gray-600 leading-relaxed">
+                La tarifa total de cada tramo se calcula con base en la distancia recorrida por el conductor en ese tramo, no cambia según cuántos pasajeros haya; lo que cambia es cómo se reparte esa tarifa entre los pasajeros presentes en el tramo. Por eso viajar solo muestra el monto más alto (toda la meta de recuperación recae en una sola persona), y compartir con más gente reduce lo que paga cada quien.
               </p>
             </div>
 
@@ -376,6 +393,165 @@ export default function LandingPage({ setRoute }: LandingPageProps) {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* NEW: SUPPORT / DONATION SECTION */}
+      <section id="apoyo-comunidad" className="py-24 bg-gradient-to-b from-indigo-50/30 to-purple-50/20 border-y border-indigo-100/40 scroll-mt-20">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center max-w-5xl mx-auto">
+            {/* Left Column: Copy & Illustration */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="inline-flex items-center gap-1.5 bg-indigo-100/60 text-indigo-700 text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full border border-indigo-200/40">
+                <Gift className="w-3.5 h-3.5" /> Iniciativa Social Solidaria
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-950 font-display">
+                ¿Te gusta Conecta X? <br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">Apóyanos a seguir creciendo</span>
+              </h2>
+              <p className="text-sm text-gray-600 leading-relaxed max-w-xl">
+                Conecta X es una iniciativa social 100% sin fines de lucro diseñada para y por la comunidad de la UAM Xochimilco. 
+                Las donaciones voluntarias nos ayudan únicamente a cubrir los costos operativos esenciales de la plataforma 
+                (hosting, bases de datos en la nube y mantenimiento de servidores de desarrollo) para asegurar que nunca generemos utilidades. 
+                ¡Cada aportación ayuda a mantener la comunidad viajando de forma segura y económica!
+              </p>
+              
+              {/* Supporting SVG Illustration representing community support & heart */}
+              <div className="pt-4 flex items-center gap-4">
+                <div className="p-4 bg-white rounded-2xl border border-indigo-100/60 shadow-xs shrink-0">
+                  <svg className="w-10 h-10 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 21a9 9 0 0 0 9-9c0-1.2-.3-2.3-.8-3.3L19 7l-2 2-2-2-2 2-2-2L9 7l-1.2.7c-.5 1-.8 2.1-.8 3.3a9 9 0 0 0 9 9Z" />
+                    <path d="M12 9a3 3 0 0 1 3 3c0 2-3 4-3 4s-3-2-3-4a3 3 0 0 1 3-3Z" fill="currentColor" className="fill-primary-light" />
+                    <path d="M7 14h.01" />
+                    <path d="M17 14h.01" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-xs font-extrabold text-gray-900 uppercase tracking-wider">Compromiso de Transparencia</h4>
+                  <p className="text-[11px] text-gray-500 max-w-sm">
+                    Toda contribución se destina exclusivamente a infraestructura técnica. No cobramos comisiones obligatorias por uso de la aplicación.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Donation Form */}
+            <div className="lg:col-span-5 bg-white p-8 rounded-3xl border border-indigo-100/50 shadow-lg shadow-indigo-100/10 space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-sm font-black text-gray-900 uppercase tracking-wider flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-primary" /> Selecciona una aportación
+                </h3>
+                <p className="text-xs text-gray-400 font-medium">
+                  Aportaciones completamente voluntarias y deducibles para el fondo operativo.
+                </p>
+              </div>
+
+              {/* Suggestions Grid */}
+              <div className="grid grid-cols-2 gap-3">
+                {[20, 50, 100].map((monto) => (
+                  <button
+                    key={monto}
+                    onClick={() => {
+                      setMontoDonacion(monto);
+                      setOtroMontoValue("");
+                    }}
+                    className={`p-4 rounded-2xl border text-center transition-all cursor-pointer focus:outline-none flex flex-col items-center justify-center gap-1 ${
+                      montoDonacion === monto
+                        ? "border-primary bg-primary-light/30 text-primary font-black shadow-xs"
+                        : "border-gray-100 hover:border-indigo-100 hover:bg-indigo-50/10 text-gray-600 font-bold"
+                    }`}
+                  >
+                    <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Aporte</span>
+                    <span className="text-base font-black">${monto} MXN</span>
+                  </button>
+                ))}
+
+                {/* Custom input button option */}
+                <button
+                  onClick={() => setMontoDonacion("otro")}
+                  className={`p-4 rounded-2xl border text-center transition-all cursor-pointer focus:outline-none flex flex-col items-center justify-center gap-1 ${
+                    montoDonacion === "otro"
+                      ? "border-primary bg-primary-light/30 text-primary font-black shadow-xs"
+                      : "border-gray-100 hover:border-indigo-100 hover:bg-indigo-50/10 text-gray-600 font-bold"
+                  }`}
+                >
+                  <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Variable</span>
+                  <span className="text-sm font-black">Otro monto</span>
+                </button>
+              </div>
+
+              {/* Custom input field when "otro" is selected */}
+              {montoDonacion === "otro" && (
+                <div className="space-y-1.5 animate-fadeIn">
+                  <label className="text-[10px] font-extrabold text-indigo-800 uppercase tracking-widest block">
+                    Monto personalizado (MXN)
+                  </label>
+                  <div className="relative rounded-2xl shadow-2xs">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <span className="text-gray-400 font-bold text-sm">$</span>
+                    </div>
+                    <input
+                      type="number"
+                      placeholder="Ej. 150"
+                      value={otroMontoValue}
+                      onChange={(e) => setOtroMontoValue(e.target.value)}
+                      className="block w-full pl-8 pr-4 py-3 border border-gray-100 rounded-2xl text-sm focus:outline-none focus:border-primary/50 text-gray-900 font-bold placeholder:text-gray-300 placeholder:font-normal"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Action Button */}
+              <button
+                onClick={() => setMostrarAgradecimiento(true)}
+                className="w-full py-4 px-6 rounded-2xl text-sm font-bold bg-primary text-white hover:bg-primary-hover transition-all shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/20 active:scale-95 cursor-pointer flex items-center justify-center gap-2 focus:outline-none"
+              >
+                <Heart className="w-4 h-4 fill-white/10 shrink-0" />
+                <span>Donar ${montoDonacion === "otro" ? (otroMontoValue || "0") : montoDonacion} MXN ahora</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Simulated Thank You Modal Overlay */}
+        {mostrarAgradecimiento && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
+            <div className="bg-white rounded-3xl border border-indigo-50 p-8 max-w-md w-full shadow-2xl relative space-y-6 text-center animate-scaleUp">
+              {/* Illustration Header */}
+              <div className="mx-auto w-16 h-16 rounded-full bg-indigo-50 flex items-center justify-center text-primary border border-indigo-100/50">
+                <Heart className="w-8 h-8 fill-primary/20 text-primary animate-pulse" />
+              </div>
+
+              {/* Modal Content */}
+              <div className="space-y-3">
+                <h3 className="text-xl font-black text-gray-950 font-display">
+                  ¡Muchísimas gracias por tu apoyo! 🫶
+                </h3>
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  Tu generosidad y compromiso son la gasolina que impulsa este proyecto social. 
+                  Queremos informarte que esta es una versión <strong className="text-primary font-bold">Prototipo MVP</strong>. 
+                  La pasarela de pago real y las donaciones monetarias directas estarán disponibles en el lanzamiento oficial de Conecta X en la UAM Xochimilco.
+                </p>
+                <div className="bg-indigo-50/40 p-3.5 rounded-2xl border border-indigo-100/30 text-[11px] text-indigo-900 font-semibold text-left space-y-1">
+                  <span className="block uppercase text-[9px] font-black tracking-widest text-indigo-500 mb-0.5">Simulación de Intención</span>
+                  <span>Monto propuesto: <strong className="text-primary">${montoDonacion === "otro" ? (otroMontoValue || "0") : montoDonacion} MXN</strong></span>
+                  <span className="block text-gray-400 font-normal">No se ha realizado ningún cobro real a tu cuenta bancaria ni se ha solicitado información confidencial.</span>
+                </div>
+              </div>
+
+              {/* Close Button */}
+              <button
+                onClick={() => {
+                  setMostrarAgradecimiento(false);
+                  setOtroMontoValue("");
+                  setMontoDonacion(50);
+                }}
+                className="w-full py-3.5 rounded-2xl text-xs font-extrabold bg-gray-950 hover:bg-gray-900 text-white transition-all cursor-pointer shadow-md focus:outline-none uppercase tracking-wider"
+              >
+                Entendido
+              </button>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* 4. SECCIÓN CTA FINAL */}
